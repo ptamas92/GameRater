@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GameRater.Data\GameRater.Data.csproj" />
     <ProjectReference Include="..\GameRater.Repo\GameRater.Repo.csproj" />
+    <ProjectReference Include="..\GameRater.Services\GameRater.Services.csproj" />
   </ItemGroup>
 
 </Project>
