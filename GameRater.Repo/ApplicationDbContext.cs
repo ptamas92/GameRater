@@ -25,8 +25,8 @@ namespace GameRater.Repo
             TestDataGenerator.Execute(modelBuilder);
         }
 
-        public DbSet<VideoGame> VideoGame { get; set; }
-        public DbSet<Publisher> Publisher { get; set; }
-        public DbSet<Rating> Rating { get; set; }
+        public DbSet<VideoGame> VideoGames { get; set; }
+        public DbSet<Publisher> Publishers { get; set; }
+        public DbSet<Rating> Ratings { get; set; }
     }
 }

@@ -3,20 +3,22 @@ using System.Linq.Expressions;
 
 namespace GameRater.Repo.Repository
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public class Repository<TContext, TEntity> : IRepository<TContext, TEntity> where TContext : class where TEntity : class
     {
         private DbSet<TEntity> entities;
         private readonly ApplicationDbContext context;
 
-        public Repository()
+        public Repository(TContext context)
         {
-            entities = context.Set<TEntity>();
+            if (typeof(TContext) == typeof(ApplicationDbContext))
+            {
+                this.context = context as ApplicationDbContext;
+                entities = (context as ApplicationDbContext).Set<TEntity>();
+            }
         }
 
         // Get
-        public IEnumerable<TEntity> Get(Expression<Func<TEntity, bool>>? filter = null,
-                                        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-                                        string includeProperties = "")
+        public IEnumerable<TEntity> Get(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = "")
         {
             IQueryable<TEntity> query = entities;
 
@@ -58,7 +60,6 @@ namespace GameRater.Repo.Repository
                 throw new ArgumentNullException("entity");
 
             context.Entry(entity).State = EntityState.Modified;
-
             SaveChanges(entity, "Update");
         }
 
@@ -78,7 +79,6 @@ namespace GameRater.Repo.Repository
                 throw new ArgumentNullException("entity");
 
             entities.Remove(entity);
-
             SaveChanges(entity, "Delete");
         }
 
@@ -93,7 +93,7 @@ namespace GameRater.Repo.Repository
 
             try
             {
-                var id = entity.GetType().GetProperty("Id")?.GetValue(entity, null)?.ToString();
+                var id = entity?.GetType().GetProperty("Id")?.GetValue(entity, null)?.ToString();
 
                 if (!string.IsNullOrEmpty(id))
                     message += $" (Id: {id})";

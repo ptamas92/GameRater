@@ -1,4 +1,5 @@
-﻿using GameRater.Repo.Repository;
+﻿using GameRater.Repo;
+using GameRater.Repo.Repository;
 using GameRater.Services.Interfaces;
 using System.Linq.Expressions;
 
@@ -6,9 +7,9 @@ namespace GameRater.Services
 {
     public class RepositoryService<TEntity> : IRepositoryService<TEntity> where TEntity : class
     {
-        private readonly IRepository<TEntity> repository;
+        private readonly IRepository<ApplicationDbContext, TEntity> repository;
 
-        public RepositoryService(IRepository<TEntity> repository)
+        public RepositoryService(IRepository<ApplicationDbContext, TEntity> repository)
         {
             this.repository = repository;
         }

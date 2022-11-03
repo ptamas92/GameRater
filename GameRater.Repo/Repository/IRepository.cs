@@ -2,7 +2,7 @@
 
 namespace GameRater.Repo.Repository
 {
-    public interface IRepository<TEntity> where TEntity : class
+    public interface IRepository<TContext, TEntity> where TContext : class where TEntity : class
     {
         IEnumerable<TEntity> Get(Expression<Func<TEntity, bool>>? filter = null,
                                  Func<IQueryable<TEntity>,

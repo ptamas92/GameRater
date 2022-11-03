@@ -25,8 +25,9 @@ builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfi
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddTransient(typeof(IRepository<,>), typeof(Repository<,>));
 builder.Services.AddTransient(typeof(IRepositoryService<>), typeof(RepositoryService<>));
+builder.Services.AddTransient(typeof(IUserService), typeof(UserService));
 
 var app = builder.Build();
 

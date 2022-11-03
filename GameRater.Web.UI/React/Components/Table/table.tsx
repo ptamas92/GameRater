@@ -157,14 +157,16 @@ export default class Table extends React.Component<ITableProps, ITableStates> {
     //setDataSource
     setDataSource = () => {
         var path = this.props.requestUrl;
-        var bodyParams = this.props.requestBodyParams;
+        var bodyParams = this.props.requestBodyParams ?? {};
 
-        //TODO: ki kell egészíteni a "bodyParams"-t --> (dataSourceLength, sortedBy, isAscending)
+        bodyParams["sortedBy"] = this.state.propForSorting;
+        bodyParams["isAscending"] = this.state.isAscendingSort;
+        bodyParams["dataSourceLength"] = this.state.dataSource?.length;
 
-        if (path.indexOf(rootPath) !== -1) {
-            var startIndex = path.indexOf(rootPath) + (rootPath + "/api/").length;
-            path = path.substring(startIndex);
-        }
+        //if (path.indexOf(rootPath) !== -1) {
+        //    var startIndex = path.indexOf(rootPath) + (rootPath + "/api/").length;
+        //    path = path.substring(startIndex);
+        //}
 
         if (path.charAt(0) === "/")
             path = path.substring(1);
@@ -172,11 +174,11 @@ export default class Table extends React.Component<ITableProps, ITableStates> {
         this._isMounted = true;
         this._disablePaginition = true;
 
-        fetch(rootPath + "/" + path,
+        fetch("/" + path,
             {
                 method: 'post',
                 headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', [requestVerificationTokenName]: requestVerificationToken },
-                body: bodyParams ? JSON.stringify(bodyParams) : ""
+                body: JSON.stringify(bodyParams)
             })
             .then(res => res.json())
             .then((result) => {
@@ -192,7 +194,7 @@ export default class Table extends React.Component<ITableProps, ITableStates> {
                     var isMoreDataSourceFragment = false;
 
                     var oldDataSource = this.state.dataSource ?? [];
-                    var resDataSource = result.dataSource && result.dataSource.length > 0 ? result.dataSource : [];
+                    var resDataSource = result.DataSource && result.DataSource.length > 0 ? result.DataSource : [];
 
                     if (this.props.isPaginationOnTheClientSide) {
                         dataSource = resDataSource;

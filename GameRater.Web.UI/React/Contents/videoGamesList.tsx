@@ -54,7 +54,7 @@ export default class Main extends React.Component<any, {}> {
 
         return (
             <Table componentKey="video_game_list"
-                   requestUrl="VideoGame"
+                   requestUrl="VideoGame/GetVideoGames"
                    requestBodyParams={null}
                    columns={columns}
                    propForRowKey="Id" />
