@@ -1,4 +1,5 @@
 ﻿using GameRater.Data;
+using GameRater.Repo.TestData;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,8 @@ namespace GameRater.Repo
                                             .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Rating>().HasKey(sc => new { sc.UserId, sc.VideoGameId });
+
+            TestDataGenerator.Execute(modelBuilder);
         }
 
         public DbSet<VideoGame> VideoGame { get; set; }

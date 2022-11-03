@@ -1,5 +1,6 @@
 using GameRater.Data;
 using GameRater.Repo;
+using GameRater.Repo.Repository;
 using GameRater.Services;
 using GameRater.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;

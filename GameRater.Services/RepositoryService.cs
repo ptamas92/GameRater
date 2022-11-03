@@ -1,4 +1,4 @@
-﻿using GameRater.Repo;
+﻿using GameRater.Repo.Repository;
 using GameRater.Services.Interfaces;
 using System.Linq.Expressions;
 

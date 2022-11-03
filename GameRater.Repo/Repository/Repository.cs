@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace GameRater.Repo
+namespace GameRater.Repo.Repository
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
@@ -14,8 +14,8 @@ namespace GameRater.Repo
         }
 
         // Get
-        public IEnumerable<TEntity> Get(Expression<Func<TEntity, bool>>? filter = null, 
-                                        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null, 
+        public IEnumerable<TEntity> Get(Expression<Func<TEntity, bool>>? filter = null,
+                                        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
                                         string includeProperties = "")
         {
             IQueryable<TEntity> query = entities;
@@ -25,7 +25,7 @@ namespace GameRater.Repo
 
             foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 query = query.Include(includeProperty);
-            
+
             return orderBy != null ? orderBy(query).ToList() : query.ToList();
         }
 
@@ -46,7 +46,7 @@ namespace GameRater.Repo
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
-            
+
             entities.Add(entity);
             SaveChanges(entity, "Insert");
         }
@@ -76,7 +76,7 @@ namespace GameRater.Repo
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
-            
+
             entities.Remove(entity);
 
             SaveChanges(entity, "Delete");
@@ -100,7 +100,7 @@ namespace GameRater.Repo
 
                 //Serilog.Log.Information(message);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 //Serilog.Log.Error(ex, message);
             }
