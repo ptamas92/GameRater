@@ -53,9 +53,10 @@ export default class Table extends React.Component<ITableProps, ITableStates> {
 
     public static defaultProps = {
         propForGrouping: "",
-        propForExpandedDetailByDefault: "",
         htmlTemplateOfGrouping: "",
+        propForExpandedDetailByDefault: "",
         htmlTemplateOfRowDetails: "",
+        isAscendingSortByDefault: true,
         isPaginationOnTheClientSide: true,
         datasourceFragmentSize: 100
     }
