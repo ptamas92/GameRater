@@ -22,4 +22,8 @@
     <ProjectReference Include="..\GameRater.Services\GameRater.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\app_bundles\" />
+  </ItemGroup>
+
 </Project>

@@ -1,17 +1,18 @@
 import * as React from "react";
 import * as ReactDOM from 'react-dom';
+import { createBrowserHistory } from "history";
 import { Router, Route, Redirect, Switch } from "react-router";
 import Main from "./Main/main";
 
 import "bootstrap-icons/font/bootstrap-icons.css"
-import "../../../WebApp.Web.Common/wwwroot/js/own.font.js";
-import "../../../WebApp.Web.Common/wwwroot/css/robotofont.css";
 
-declare var rootPath;
-
-const mql = window.matchMedia(`(min-width: 1056px)`);
+const history = createBrowserHistory();
 
 class App extends React.Component<{}, {}> {
+
+    constructor(props) {
+        super(props);
+    }
 
     //---------------------------------------------------------------------------------------------------------------
     // RENDER
@@ -22,8 +23,11 @@ class App extends React.Component<{}, {}> {
             <React.Fragment>
                 <Router history={history as any}>
                     <Switch>
-                        <Route exact path={rootPath + "/:key/:parameters?"} component={Main} />
-                        <Redirect from="*" to={rootPath + "/404"} />
+                        <Route exact path={"/"} component={Main} />
+                        <Route exact path={"/Home"} component={Main} />
+                        <Route exact path={"/Home/Index"} component={Main} />
+                        {/*<Route exact path={"/:key/:parameters?"} component={Main} />*/}
+                        <Redirect from="*" to={"/404"} />
                     </Switch>
                 </Router>
             </React.Fragment>

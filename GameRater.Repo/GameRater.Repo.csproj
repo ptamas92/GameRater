@@ -14,8 +14,4 @@
     <ProjectReference Include="..\GameRater.Data\GameRater.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Mappings\" />
-  </ItemGroup>
-
 </Project>

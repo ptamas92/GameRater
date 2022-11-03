@@ -4,6 +4,7 @@ using GameRater.Repo;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameRater.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221103113808_VideoGameRatings")]
+    partial class VideoGameRatings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,12 +44,10 @@ namespace GameRater.Repo.Migrations
             modelBuilder.Entity("GameRater.Data.Rating", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("UserFK");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("VideoGameId")
-                        .HasColumnType("int")
-                        .HasColumnName("VideoGameFK");
+                        .HasColumnType("int");
 
                     b.Property<int>("Value")
                         .HasColumnType("int");
@@ -142,8 +142,7 @@ namespace GameRater.Repo.Migrations
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<int>("PublisherId")
-                        .HasColumnType("int")
-                        .HasColumnName("PublisherFK");
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
