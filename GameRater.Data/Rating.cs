@@ -9,13 +9,13 @@ namespace GameRater.Data
         public int VideoGameId { get; set; }
 
         [ForeignKey("VideoGameId")]
-        public VideoGame VideoGame { get; set; }
+        public virtual VideoGame VideoGame { get; set; }
 
         [Column("UserFK")]
         public string UserId { get; set; }
 
         [ForeignKey("UserId")]
-        public User User { get; set; }
+        public virtual User User { get; set; }
 
         public int Value { get; set; }
     }

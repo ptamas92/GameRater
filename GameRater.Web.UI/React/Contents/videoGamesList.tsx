@@ -25,7 +25,7 @@ export default class Main extends React.Component<any, {}> {
                 isSortable: true,
                 minWidth: 100
             },
-            "CoverImageLink": {
+            "CoverImageUrl": {
                 title: "CoverImageLink",
                 htmlTemplateOfRowCell: null,
                 isAlwaysVisible: true,

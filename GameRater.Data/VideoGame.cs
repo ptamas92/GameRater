@@ -26,8 +26,8 @@ namespace GameRater.Data
 
         [Required]
         [ForeignKey("PublisherId")]
-        public Publisher Publisher { get; set; }
+        public virtual Publisher Publisher { get; set; }
 
-        public IList<Rating> Ratings { get; set; } = new List<Rating>();
+        public virtual IList<Rating> Ratings { get; set; } = new List<Rating>();
     }
 }

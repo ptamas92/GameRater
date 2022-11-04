@@ -13,6 +13,6 @@ namespace GameRater.Data
         [Required]
         public string Name { get; set; }
 
-        public IList<VideoGame> VideoGames { get; set; } = new List<VideoGame>();
+        public virtual IList<VideoGame> VideoGames { get; set; } = new List<VideoGame>();
     }
 }

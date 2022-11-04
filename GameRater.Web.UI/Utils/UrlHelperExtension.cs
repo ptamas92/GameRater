@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace GameRater.Web.UI.Controllers.Utils
+namespace GameRater.Web.UI.Utils
 {
     public static class UrlHelperExtension
     {
