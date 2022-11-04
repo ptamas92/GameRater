@@ -1,4 +1,5 @@
-﻿
+﻿import ReactDOMServer from 'react-dom/server';
+
 //getValueOfTemplateAliases
 export function getValueOfTemplateAliases (obj: object) {
     var res = [];
@@ -105,4 +106,9 @@ export function getDataSourceForTheCurrentPage (formattedDataSource: Array<any>,
     }
 
     return res;
+}
+
+//convertJsxToHtml
+export function convertJsxToHtml(el) {
+    return ReactDOMServer.renderToStaticMarkup(el);
 }

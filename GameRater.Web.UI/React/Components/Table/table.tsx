@@ -7,8 +7,6 @@ import { TableContainer } from "./__styledTable";
 import { getValueOfTemplateAliases, replaceAliases, groupBy, sorting, getDataSourceForTheCurrentPage } from "../../Services/dataSourceFormatterService";
 import * as FlashMessageService from "../../Services/flashMessageService";
 
-declare var rootPath, requestVerificationTokenName, requestVerificationToken;
-
 export interface ITableColumn {
     title?: string,
     htmlTemplateOfRowCell?: string,
@@ -32,6 +30,7 @@ interface ITableProps {
     isAscendingSortByDefault?: boolean,
     isPaginationOnTheClientSide?: boolean
     dataSourceFragmentSize?: number,
+    formattedDataSourceManipulationAfterArrivingFromTheServerSide?: (ds: any) => any,
     onRowClick?: (obj: any, rowId: string, e: React.MouseEvent<Element, MouseEvent>) => void
 }
 
@@ -180,13 +179,12 @@ export default class Table extends React.Component<ITableProps, ITableStates> {
             .then(res => res.json())
             .then((result) => {
                 if (this._isMounted) {
-                    console.log(result);
-
                     if (result.FlashMessage !== undefined && result.FlashMessage !== null) {
                         var fm = result.FlashMessage;
                         FlashMessageService.show(fm.ResultType, fm.FlashMessage, fm.FlashMessageTimeOut);
                     }
 
+                    var activePage = 1;
                     var dataSource = [];
                     var formattedDataSource = [];
                     var currentPageDataSource = this.state.currentPageDataSource;
@@ -198,12 +196,12 @@ export default class Table extends React.Component<ITableProps, ITableStates> {
                     if (this.props.isPaginationOnTheClientSide) {
                         dataSource = resDataSource;
                         formattedDataSource = this.setFormattedDataSource(this.props, dataSource);
-                        currentPageDataSource = getDataSourceForTheCurrentPage(formattedDataSource, 1, dataSource.length > 40);
                     }
                     else {
                         var dataSourceFragment = resDataSource;
                         var formattedDataSourceFragment = this.setFormattedDataSource(this.props, dataSourceFragment);
 
+                        activePage = this.state.activePage;
                         dataSource = oldDataSource.concat(dataSourceFragment);
                         isMoreDataSourceFragment = dataSourceFragment.length >= this.props.dataSourceFragmentSize;
 
@@ -218,9 +216,10 @@ export default class Table extends React.Component<ITableProps, ITableStates> {
                             else
                                 formattedDataSource[0].objArray = formattedDataSource[0].objArray.concat(formattedDataSourceFragment[0].objArray);
                         }
-
-                        currentPageDataSource = getDataSourceForTheCurrentPage(formattedDataSource, this.state.activePage, dataSource.length > 40);
                     }
+
+                    formattedDataSource = this.props.formattedDataSourceManipulationAfterArrivingFromTheServerSide(formattedDataSource);
+                    currentPageDataSource = getDataSourceForTheCurrentPage(formattedDataSource, 1, dataSource.length > 40);
 
                     this.setState({
                         dataSource,

@@ -1,56 +1,81 @@
 import * as React from "react";
+/*import $ from 'jquery';*/
 import Table, { ITableColumn } from "../Components/Table/table";
+import RatingStarBox from "../Components/Utils/ratingStarBox";
+import { convertJsxToHtml } from "../Services/dataSourceFormatterService";
 
 export default class Main extends React.Component<any, {}> {
 
     //---------------------------------------------------------------------------------------------------------------
-    // RENDER
+    // Functions
     //---------------------------------------------------------------------------------------------------------------
 
-    render() {
-        var columns: Record<string, ITableColumn> = {
+    //getCoumns
+    getCoumns = () => {
+        return {
             "Title": {
                 title: "Title",
                 htmlTemplateOfRowCell: null,
                 isAlwaysVisible: true,
                 isDisplayByDefault: true,
-                isSortable: true,
-                minWidth: 200
+                isSortable: false,
+                minWidth: 100
             },
             "YearOfPublication": {
                 title: "Year of publication",
                 htmlTemplateOfRowCell: null,
                 isAlwaysVisible: false,
                 isDisplayByDefault: true,
-                isSortable: true,
-                minWidth: 100
+                isSortable: false,
+                minWidth: 80
             },
             "CoverImageUrl": {
                 title: "Cover image",
-                htmlTemplateOfRowCell: null,
+                htmlTemplateOfRowCell: convertJsxToHtml(<a href="[##Obj.CoverImageUrl##]" target="_blank">Link</a>),
                 isAlwaysVisible: true,
                 isDisplayByDefault: true,
                 isSortable: false,
-                minWidth: 100
+                minWidth: 80
             },
             "Publisher": {
                 title: "Publisher",
                 htmlTemplateOfRowCell: null,
                 isAlwaysVisible: false,
                 isDisplayByDefault: true,
-                isSortable: true,
-                minWidth: 100
+                isSortable: false,
+                minWidth: 80
             },
             "Rating": {
-                title: "Rating",
-                htmlTemplateOfRowCell: null,
+                title: " ",
+                htmlTemplateOfRowCell: " ",
                 isAlwaysVisible: true,
                 isDisplayByDefault: true,
-                isSortable: false,
-                minWidth: 100
+                isSortable: false
             },
-        };
+        } as Record<string, ITableColumn>;
+    }
 
+    //SetRatingColumn
+    SetRatingColumn = (ds) => {
+        ds[0].objArray.forEach(function (item) {
+            var averageRate = item.AverageRate;
+            var htmlStringsForColumns = item.htmlStringsForColumns;
+
+            var fullStarNum = parseInt(averageRate.toString(), 10);
+            var isNextHalf = Math.round(averageRate) !== fullStarNum;
+
+            htmlStringsForColumns.filter(x => x.key === "Rating")[0].value = <RatingStarBox fullStarNum={fullStarNum} isNextHalf={isNextHalf} />
+        });
+
+        return ds;
+    }
+
+    //---------------------------------------------------------------------------------------------------------------
+    // RENDER
+    //---------------------------------------------------------------------------------------------------------------
+
+    render() {
+        var columns = this.getCoumns();
 
         return (
             <Table componentKey="video_game_list"
@@ -59,7 +84,8 @@ export default class Main extends React.Component<any, {}> {
                    columns={columns}
                    propForRowKey="Id"
                    dataSourceFragmentSize={100}
-                   isPaginationOnTheClientSide={false} />
+                   isPaginationOnTheClientSide={false}
+                   formattedDataSourceManipulationAfterArrivingFromTheServerSide={this.SetRatingColumn} />
         )
     }
 }

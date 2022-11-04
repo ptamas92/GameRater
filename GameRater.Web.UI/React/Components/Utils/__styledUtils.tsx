@@ -60,6 +60,17 @@ const StyledPaginationContainer = styled.div`
     }
 `;
 
+//StyledRatingStarBox
+const StyledRatingStarBox = styled.div`
+    text-align: right;
+    
+    > i {
+        cursor: pointer;
+        color: #ffb700;
+    }
+`;
+
 export {
-    StyledPaginationContainer as PaginationContainer
+    StyledPaginationContainer as PaginationContainer,
+    StyledRatingStarBox as RatingStarBox
 };

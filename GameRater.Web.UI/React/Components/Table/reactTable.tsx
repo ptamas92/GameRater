@@ -160,13 +160,13 @@ const ReactTableBody = ({ data, columns, defaultColumn, expanded, currentPageDat
                                                          data-is-even={rowIndex % 2 !== 0}
                                                          onClick={(e) => onRowClick(item, id, e, isDetail)}>
                                                          {
-                                                             row.cells.map(cell => {
-                                                                 return (
-                                                                     <div {...cell.getCellProps()} className="td" data-column-id={cell.column.id}>
-                                                                         {cell.render('Cell')}
-                                                                     </div>
-                                                                 )
-                                                             })
+                                                            row.cells.map(cell => {
+                                                                return (
+                                                                    <div {...cell.getCellProps()} className="td" data-column-id={cell.column.id}>
+                                                                        {typeof cell.value === 'string' || cell.value instanceof String ? cell.render('Cell') : cell.value}
+                                                                    </div>
+                                                                )
+                                                            })
                                                          }
                                                     </div>
                                                     {
