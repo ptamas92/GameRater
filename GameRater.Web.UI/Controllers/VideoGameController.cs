@@ -35,6 +35,7 @@ namespace GameRater.Web.UI.Controllers
                                                            .OrderBy(x => x.Title))
                                                            .Select(x => new VideoGameListItemModel()
                                                            {
+                                                               Id = x.Id,
                                                                Title = x.Title,
                                                                YearOfPublication = x.YearOfPublication,
                                                                CoverImageUrl = x.CoverImageUrl,

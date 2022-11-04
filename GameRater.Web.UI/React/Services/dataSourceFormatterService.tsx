@@ -1,5 +1,7 @@
 ﻿import ReactDOMServer from 'react-dom/server';
 
+declare var sizePerPage;
+
 //getValueOfTemplateAliases
 export function getValueOfTemplateAliases (obj: object) {
     var res = [];
@@ -70,8 +72,8 @@ export function getDataSourceForTheCurrentPage (formattedDataSource: Array<any>,
     var res = [];
     var isForcedBreak = false;
     var counter = 0;
-    var counterStart = (activePage * 25) - 24;
-    var counterEnd = activePage * 25;
+    var counterStart = (activePage * sizePerPage) - (sizePerPage - 1);
+    var counterEnd = activePage * sizePerPage;
 
     for (var x = 0; x < formattedDataSource.length; x++) {
         var group = formattedDataSource[x];

@@ -15,7 +15,8 @@ enum StarState {
 
 interface ITableContentProps {
     fullStarNum: number,
-    isNextHalf: boolean
+    isNextHalf: boolean,
+    onStarClick: (starKey: number) => void
 }
 
 interface ITableContentStates {
@@ -102,6 +103,7 @@ export default class TableContent extends React.Component<ITableContentProps, IT
                             <i key={star.key}
                                data-star-index={star.key}
                                className={"star-item " + className}
+                               onClick={() => this.props.onStarClick(star.key)}
                                onMouseEnter={(e) => this.onMouseEnter(e)}></i> 
                         )
                     })

@@ -2,6 +2,8 @@
 import ReactPagination from "react-js-pagination";
 import { PaginationContainer } from "./__styledUtils";
 
+declare var sizePerPage;
+
 export enum PaginationPosition {
     left,
     right,
@@ -35,7 +37,7 @@ export default class TableContent extends React.Component<IPaginationProps, {}> 
                                  nextPageText='>'
                                  firstPageText='<<'
                                  lastPageText='>>'
-                                 itemsCountPerPage={25}
+                                 itemsCountPerPage={sizePerPage}
                                  pageRangeDisplayed={3}
                                  activePage={activePage}
                                  totalItemsCount={dataSourceLength}

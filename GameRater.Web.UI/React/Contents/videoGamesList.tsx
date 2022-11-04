@@ -4,6 +4,8 @@ import Table, { ITableColumn } from "../Components/Table/table";
 import RatingStarBox from "../Components/Utils/ratingStarBox";
 import { convertJsxToHtml } from "../Services/dataSourceFormatterService";
 
+declare var sizePerPage;
+
 export default class Main extends React.Component<any, {}> {
 
     //---------------------------------------------------------------------------------------------------------------
@@ -55,8 +57,10 @@ export default class Main extends React.Component<any, {}> {
         } as Record<string, ITableColumn>;
     }
 
-    //SetRatingColumn
-    SetRatingColumn = (ds) => {
+    //setRatingColumn
+    setRatingColumn = (ds) => {
+        var _this = this;
+
         ds[0].objArray.forEach(function (item) {
             var averageRate = item.AverageRate;
             var htmlStringsForColumns = item.htmlStringsForColumns;
@@ -64,10 +68,17 @@ export default class Main extends React.Component<any, {}> {
             var fullStarNum = parseInt(averageRate.toString(), 10);
             var isNextHalf = Math.round(averageRate) !== fullStarNum;
 
-            htmlStringsForColumns.filter(x => x.key === "Rating")[0].value = <RatingStarBox fullStarNum={fullStarNum} isNextHalf={isNextHalf} />
+            htmlStringsForColumns.filter(x => x.key === "Rating")[0].value = <RatingStarBox fullStarNum={fullStarNum}
+                                                                                            isNextHalf={isNextHalf}
+                                                                                            onStarClick={(starKey) => _this.onStarClick(item, starKey)} />
         });
 
         return ds;
+    }
+
+    //onStarClick
+    onStarClick = (item, starKey) => {
+        console.log(item.Id, starKey);
     }
 
     //---------------------------------------------------------------------------------------------------------------
@@ -83,9 +94,9 @@ export default class Main extends React.Component<any, {}> {
                    requestParams={null}
                    columns={columns}
                    propForRowKey="Id"
-                   dataSourceFragmentSize={100}
+                   dataSourceFragmentSize={sizePerPage * 4}
                    isPaginationOnTheClientSide={false}
-                   formattedDataSourceManipulationAfterArrivingFromTheServerSide={this.SetRatingColumn} />
+                   formattedDataSourceManipulationAfterArrivingFromTheServerSide={this.setRatingColumn} />
         )
     }
 }

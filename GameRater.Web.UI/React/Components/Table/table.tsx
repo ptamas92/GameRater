@@ -7,6 +7,8 @@ import { TableContainer } from "./__styledTable";
 import { getValueOfTemplateAliases, replaceAliases, groupBy, sorting, getDataSourceForTheCurrentPage } from "../../Services/dataSourceFormatterService";
 import * as FlashMessageService from "../../Services/flashMessageService";
 
+declare var sizePerPage;
+
 export interface ITableColumn {
     title?: string,
     htmlTemplateOfRowCell?: string,
@@ -138,7 +140,7 @@ export default class Table extends React.Component<ITableProps, ITableStates> {
             }, () => {
                 if (!this.props.isPaginationOnTheClientSide && this.state.isMoreDataSourceFragment) {
                     var dataSourceLength = this.state.dataSource.length;
-                    var pl = dataSourceLength / 25;
+                    var pl = dataSourceLength / sizePerPage;
                     var pagesLength = pl % 1 === 0 ? pl : pl + 1;
                     var penultimate = Math.floor(pagesLength - 1);
 
@@ -219,7 +221,7 @@ export default class Table extends React.Component<ITableProps, ITableStates> {
                     }
 
                     formattedDataSource = this.props.formattedDataSourceManipulationAfterArrivingFromTheServerSide(formattedDataSource);
-                    currentPageDataSource = getDataSourceForTheCurrentPage(formattedDataSource, 1, dataSource.length > 40);
+                    currentPageDataSource = getDataSourceForTheCurrentPage(formattedDataSource, activePage, dataSource.length > 40);
 
                     this.setState({
                         dataSource,

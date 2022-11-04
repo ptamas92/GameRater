@@ -15,6 +15,7 @@ namespace GameRater.Web.UI.Models.VideoGame
 
     public class VideoGameListItemModel
     {
+        public int Id { get; set; }
         public string Title { get; set; }
         public int YearOfPublication { get; set; }
         public string CoverImageUrl { get; set; }
