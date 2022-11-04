@@ -18,7 +18,7 @@ export default class Main extends React.Component<any, {}> {
                 minWidth: 200
             },
             "YearOfPublication": {
-                title: "YearOfPublication",
+                title: "Year of publication",
                 htmlTemplateOfRowCell: null,
                 isAlwaysVisible: false,
                 isDisplayByDefault: true,
@@ -26,7 +26,7 @@ export default class Main extends React.Component<any, {}> {
                 minWidth: 100
             },
             "CoverImageUrl": {
-                title: "CoverImageLink",
+                title: "Cover image",
                 htmlTemplateOfRowCell: null,
                 isAlwaysVisible: true,
                 isDisplayByDefault: true,
@@ -55,9 +55,11 @@ export default class Main extends React.Component<any, {}> {
         return (
             <Table componentKey="video_game_list"
                    requestUrl="VideoGame/GetVideoGames"
-                   requestBodyParams={null}
+                   requestParams={null}
                    columns={columns}
-                   propForRowKey="Id" />
+                   propForRowKey="Id"
+                   dataSourceFragmentSize={100}
+                   isPaginationOnTheClientSide={false} />
         )
     }
 }

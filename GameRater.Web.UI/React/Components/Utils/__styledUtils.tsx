@@ -35,6 +35,7 @@ const StyledPaginationContainer = styled.div`
             line-height: 1.42857143;
             text-decoration: none;
             color: ${baseColor};
+            font-size: 14px;
             border-radius: 25px;
             background-color: #fff;
             border: 1px solid #ddd;

@@ -3,6 +3,7 @@ using GameRater.Repo;
 using GameRater.Repo.Repository;
 using GameRater.Services;
 using GameRater.Services.Interfaces;
+using GameRater.Web.UI.Utils;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,7 +25,12 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+});
+
+builder.Services.AddSingleton(builder.Configuration.GetSection("AppConfig").Get<AppConfig>());
 
 builder.Services.AddTransient(typeof(IRepository<,>), typeof(Repository<,>));
 builder.Services.AddTransient(typeof(IRepositoryService<>), typeof(RepositoryService<>));

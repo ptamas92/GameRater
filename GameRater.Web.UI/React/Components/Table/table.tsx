@@ -1,5 +1,6 @@
 ﻿import * as React from "react";
 import ReactHtmlParser from 'react-html-parser';
+import $ from 'jquery';
 import ReactTable from "./reactTable";
 import Pagination, { PaginationPosition } from "../Utils/pagination";
 import { TableContainer } from "./__styledTable";
@@ -20,7 +21,7 @@ export interface ITableColumn {
 interface ITableProps {
     componentKey: string,
     requestUrl: string,
-    requestBodyParams: any,
+    requestParams: any,
     columns: Record<string, ITableColumn>,
     propForRowKey: string,
     propForGrouping?: string,
@@ -157,16 +158,13 @@ export default class Table extends React.Component<ITableProps, ITableStates> {
     //setDataSource
     setDataSource = () => {
         var path = this.props.requestUrl;
-        var bodyParams = this.props.requestBodyParams ?? {};
+        var params = this.props.requestParams ?? {};
 
-        bodyParams["sortedBy"] = this.state.propForSorting;
-        bodyParams["isAscending"] = this.state.isAscendingSort;
-        bodyParams["dataSourceLength"] = this.state.dataSource?.length;
+        params["sortedBy"] = this.state.propForSorting;
+        params["isAscending"] = this.state.isAscendingSort;
+        params["dataSourceLength"] = this.state.dataSource?.length;
 
-        //if (path.indexOf(rootPath) !== -1) {
-        //    var startIndex = path.indexOf(rootPath) + (rootPath + "/api/").length;
-        //    path = path.substring(startIndex);
-        //}
+        var queryString = $.param(params);
 
         if (path.charAt(0) === "/")
             path = path.substring(1);
@@ -174,15 +172,16 @@ export default class Table extends React.Component<ITableProps, ITableStates> {
         this._isMounted = true;
         this._disablePaginition = true;
 
-        fetch("/" + path,
+        fetch("/" + path + "?" + queryString,
             {
-                method: 'post',
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', [requestVerificationTokenName]: requestVerificationToken },
-                body: JSON.stringify(bodyParams)
+                method: 'get',
+                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
             })
             .then(res => res.json())
             .then((result) => {
                 if (this._isMounted) {
+                    console.log(result);
+
                     if (result.FlashMessage !== undefined && result.FlashMessage !== null) {
                         var fm = result.FlashMessage;
                         FlashMessageService.show(fm.ResultType, fm.FlashMessage, fm.FlashMessageTimeOut);
@@ -212,9 +211,15 @@ export default class Table extends React.Component<ITableProps, ITableStates> {
                             formattedDataSource = this.state.formattedDataSource.concat(formattedDataSourceFragment);
                         }
                         else {
-                            formattedDataSource = this.state.formattedDataSource;
-                            formattedDataSource[0].objArray = formattedDataSource[0].objArray.concat(formattedDataSourceFragment[0].objArray);
+                            formattedDataSource = this.state.formattedDataSource ?? [];
+
+                            if (formattedDataSource.length === 0)
+                                formattedDataSource[0] = formattedDataSourceFragment[0];
+                            else
+                                formattedDataSource[0].objArray = formattedDataSource[0].objArray.concat(formattedDataSourceFragment[0].objArray);
                         }
+
+                        currentPageDataSource = getDataSourceForTheCurrentPage(formattedDataSource, this.state.activePage, dataSource.length > 40);
                     }
 
                     this.setState({

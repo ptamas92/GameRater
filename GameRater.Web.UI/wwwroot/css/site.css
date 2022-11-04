@@ -20,3 +20,64 @@ body {
 #app_container {
     position: relative;
 }
+
+/* Customized checkbox */
+
+.customized-cb {
+    position: relative;
+}
+
+.customized-cb input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.customized-cb span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 18px;
+    width: 18px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.customized-cb span > span.customized-cb-label {
+    top: -1px;
+    left: 16px;
+    padding-left: 10px;
+    border: none;
+    font-weight: bold;
+    background-color: transparent;
+}
+
+.customized-cb input:checked ~ span {
+    background-color: #2196F3;
+    border-color: #2196F3;
+}
+
+.customized-cb span:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.customized-cb input:checked ~ span:after {
+    display: block;
+}
+
+.customized-cb span:after {
+    left: 5px;
+    top: 2px;
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}

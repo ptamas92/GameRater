@@ -13,6 +13,6 @@
     {
         public FlashMessageModel? FlashMessage { get; set; }
 
-        public List<object> DataSource { get; set; } = new List<object>();
+        public object DataSource { get; set; }
     }
 }
