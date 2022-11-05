@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameRater.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221103122149_RenameForeignKeys")]
-    partial class RenameForeignKeys
+    [Migration("20221105131146_CreateSchema")]
+    partial class CreateSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

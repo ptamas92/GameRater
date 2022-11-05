@@ -394,7 +394,7 @@ export default class Table extends React.Component<ITableProps, ITableStates> {
         Object.keys(columns).map(function (colKey) {
             var currCol = columns[colKey];
             var title = currCol.title ? currCol.title : colKey;
-            var isShow = currCol.isDisplayByDefault ? currCol.isDisplayByDefault : true;
+            var isShow: boolean = currCol.isDisplayByDefault ? currCol.isDisplayByDefault : true;
             var isAlwaysVisible = currCol.isAlwaysVisible ? currCol.isAlwaysVisible : false;
 
             if (_this._hiddenColumns !== null && _this._hiddenColumns.indexOf(colKey) !== -1)
