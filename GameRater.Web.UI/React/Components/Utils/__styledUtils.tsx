@@ -60,6 +60,48 @@ const StyledPaginationContainer = styled.div`
     }
 `;
 
+//StyledFlashMessageContainer
+const StyledFlashMessageContainer = styled.div`
+    && > div {
+        top: 50px !important;
+        padding-right: 0 !important;
+
+        [class*="Alert-headline-"] {
+            display: none;
+        }
+
+        .alert {
+            padding: 0.4rem 1rem 0.5rem 1rem;
+
+            button.close {
+                outline: none;
+                padding: 0 0 0 15px
+                background-color: transparent;
+                border: 0;
+                float: right;
+                font-size: 1.5rem;
+                font-weight: 700;
+                line-height: 1;
+                color: #000;
+                text-shadow: 0 1px 0 #fff;
+                opacity: .5;
+            }
+
+            button.close:hover {
+                opacity: 1;
+            }
+
+            i {
+                opacity: 0.6;
+            }
+
+            i ~ div > div {
+                padding-top: 1px;
+            }
+        }
+    }
+`;
+
 //StyledRatingStarBox
 const StyledRatingStarBox = styled.div`
     text-align: right;
@@ -72,5 +114,6 @@ const StyledRatingStarBox = styled.div`
 
 export {
     StyledPaginationContainer as PaginationContainer,
+    StyledFlashMessageContainer as FlashMessageContainer,
     StyledRatingStarBox as RatingStarBox
 };

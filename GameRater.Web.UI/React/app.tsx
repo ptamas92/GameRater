@@ -1,8 +1,10 @@
 import * as React from "react";
 import * as ReactDOM from 'react-dom';
+import { AlertList } from "react-bs-notifier";
 import { createBrowserHistory } from "history";
 import { Router, Route, Redirect, Switch } from "react-router";
-import Main from "./Contents/videoGamesList";
+import VideoGamesList from "./Contents/videoGamesList";
+import { FlashMessageContainer } from "./Components/Utils/__styledUtils"
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
@@ -11,9 +13,9 @@ import "bootstrap-icons/font/bootstrap-icons.css"
 const history = createBrowserHistory();
 
 interface IFlashMessageModel {
-    resultType: string, // success, danger, info, warning
-    message: string,
-    timeOut: number
+    ResultType: string, // success, danger, info, warning
+    Message: string,
+    TimeOut: number
 }
 
 interface IAppContentStates {
@@ -51,23 +53,23 @@ class App extends React.Component<{}, IAppContentStates> {
 
         var newAlert = {
             id: id,
-            type: model.resultType,
+            type: model.ResultType,
             headline: "",
-            message: model.message
+            message: model.Message
         };
 
         alerts.push(newAlert);
 
-        if (model.timeOut > 0) {
+        if (model.TimeOut > 0) {
             setTimeout(function () {
                 _this.onAlertDismissed(newAlert);
-            }, model.timeOut)
+            }, model.TimeOut)
         }
 
         this.setState({
             flashMessageAlerts: alerts
         }, () => {
-            this.setFlashMessageIcon(alerts, id, model.resultType);
+            this.setFlashMessageIcon(alerts, id, model.ResultType);
         });
     }
 
@@ -119,14 +121,21 @@ class App extends React.Component<{}, IAppContentStates> {
     //---------------------------------------------------------------------------------------------------------------
 
     render() {
+        var alerts = this.state.flashMessageAlerts;
+
+        console.log(alerts);
+
         return (
             <React.Fragment>
+                <FlashMessageContainer id="app_main_flash_message">
+                    <AlertList alerts={alerts} position="top-right" dismissTitle="" onDismiss={this.onAlertDismissed.bind(this)} />
+                </FlashMessageContainer>
+
                 <Router history={history as any}>
                     <Switch>
-                        <Route exact path={"/"} component={Main} />
-                        <Route exact path={"/Home"} component={Main} />
-                        <Route exact path={"/Home/Index"} component={Main} />
-                        {/*<Route exact path={"/:key/:parameters?"} component={Main} />*/}
+                        <Route exact path={"/"} component={VideoGamesList} />
+                        <Route exact path={"/Home"} component={VideoGamesList} />
+                        <Route exact path={"/Home/Index"} component={VideoGamesList} />
                         <Redirect from="*" to={"/404"} />
                     </Switch>
                 </Router>
