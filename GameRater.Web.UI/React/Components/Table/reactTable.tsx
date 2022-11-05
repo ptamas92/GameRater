@@ -163,7 +163,7 @@ const ReactTableBody = ({ data, columns, defaultColumn, expanded, currentPageDat
                                                             row.cells.map(cell => {
                                                                 return (
                                                                     <div {...cell.getCellProps()} className="td" data-column-id={cell.column.id}>
-                                                                        {typeof cell.value === 'string' || cell.value instanceof String ? cell.render('Cell') : cell.value}
+                                                                        {cell.render('Cell')}
                                                                     </div>
                                                                 )
                                                             })

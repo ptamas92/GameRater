@@ -62,11 +62,11 @@ export default class Main extends React.Component<any, {}> {
         var _this = this;
 
         ds[0].objArray.forEach(function (item) {
-            var averageRate = item.AverageRate;
-            var htmlStringsForColumns = item.htmlStringsForColumns;
+            let averageRate = item.AverageRate;
+            let htmlStringsForColumns = item.htmlStringsForColumns;
 
-            var fullStarNum = parseInt(averageRate.toString(), 10);
-            var isNextHalf = Math.round(averageRate) !== fullStarNum;
+            let fullStarNum = parseInt(averageRate.toString(), 10);
+            let isNextHalf = Math.round(averageRate) !== fullStarNum;
 
             htmlStringsForColumns.filter(x => x.key === "Rating")[0].value = <RatingStarBox fullStarNum={fullStarNum}
                                                                                             isNextHalf={isNextHalf}

@@ -421,7 +421,7 @@ export default class Table extends React.Component<ITableProps, ITableStates> {
                         </React.Fragment>
                     )
                 },
-                Cell: props => ReactHtmlParser(props.value)
+                Cell: props => typeof props.value === 'string' || props.value instanceof String ? ReactHtmlParser(props.value) : props.value
             });
         });
 

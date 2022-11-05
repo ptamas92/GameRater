@@ -30,13 +30,15 @@ export default class TableContent extends React.Component<ITableContentProps, IT
 
         var objArray = [] as Array<IStarState>;
 
+        console.log(props.isNextHalf);
+
         for (var i = 1; i <= 10; i++) {
             var state = StarState.Empty;
 
             if (i <= props.fullStarNum)
                 state = StarState.Fill;
 
-            else if (i + 1 === props.fullStarNum && props.isNextHalf)
+            else if (i === props.fullStarNum + 1 && props.isNextHalf)
                 state = StarState.HalfFill;
 
             objArray.push({
