@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameRater.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221105131146_CreateSchema")]
+    [Migration("20221105151517_CreateSchema")]
     partial class CreateSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

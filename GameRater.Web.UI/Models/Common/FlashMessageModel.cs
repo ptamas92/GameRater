@@ -12,15 +12,15 @@ namespace GameRater.Web.UI.Models.Common
 
     public class FlashMessageModel
     {
-        public FlashMessageModel(FlashMessageType resultType, string messageTransKey, int timeOutInSeconds = 0)
+        public FlashMessageModel(FlashMessageType resultType, string message, int timeOutInSeconds = 0)
         {
             TimeOut = timeOutInSeconds * 1000;
-            MessageTransKey = messageTransKey;
+            Message = message;
             ResultType = GetResultTypeAsString(resultType);
         }
 
         public int TimeOut { get; set; }
-        public string MessageTransKey { get; set; }
+        public string Message { get; set; }
         public string ResultType { get; set; }
 
 

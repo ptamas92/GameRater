@@ -2,11 +2,24 @@ import * as React from "react";
 /*import $ from 'jquery';*/
 import Table, { ITableColumn } from "../Components/Table/table";
 import RatingStarBox from "../Components/Utils/ratingStarBox";
+import * as EventHandlerService from "../Services/eventHandlerService";
 import { convertJsxToHtml } from "../Services/dataSourceFormatterService";
 
 declare var sizePerPage;
+declare var requestVerificationToken;
+declare var requestVerificationTokenName;
 
 export default class Main extends React.Component<any, {}> {
+
+    _isMounted: boolean = false;
+
+    constructor(props) {
+        super(props);
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
 
     //---------------------------------------------------------------------------------------------------------------
     // Functions
@@ -62,15 +75,7 @@ export default class Main extends React.Component<any, {}> {
         var _this = this;
 
         ds[0].objArray.forEach(function (item) {
-            let averageRate = item.AverageRate;
-            let htmlStringsForColumns = item.htmlStringsForColumns;
-
-            let fullStarNum = parseInt(averageRate.toString(), 10);
-            let isNextHalf = Math.round(averageRate) !== fullStarNum;
-
-            htmlStringsForColumns.filter(x => x.key === "Rating")[0].value = <RatingStarBox fullStarNum={fullStarNum}
-                                                                                            isNextHalf={isNextHalf}
-                                                                                            onStarClick={(starKey) => _this.onStarClick(item, starKey)} />
+            item.htmlStringsForColumns.filter(x => x.key === "Rating")[0].value = _this.getRatingStarBox(item);
         });
 
         return ds;
@@ -78,7 +83,50 @@ export default class Main extends React.Component<any, {}> {
 
     //onStarClick
     onStarClick = (item, starKey) => {
-        console.log(item.Id, starKey);
+        this._isMounted = true;
+
+        var params = {
+            id: item.Id,
+            value: starKey
+        };
+
+        fetch("/VideoGame/Rating",
+            {
+                method: 'post',
+                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', [requestVerificationTokenName]: requestVerificationToken },
+                body: JSON.stringify(params)
+            })
+            .then(res => res.json())
+            .then((result) => {
+                if (this._isMounted) {
+
+                    console.log(result.FlashMessage);
+
+                    if (result.FlashMessage !== null) 
+                        EventHandlerService.callEvent("event_flash_message_display", JSON.stringify(result.FlashMessage));
+
+                    if (result.AverageRate) {
+                        item.AverageRate = result.AverageRate;
+                        item.htmlStringsForColumns.filter(x => x.key === "Rating")[0].value = this.getRatingStarBox(item);
+
+
+                    }
+                }
+            }, (error) => {
+                console.log(error);
+
+                return null;
+            })
+    }
+
+    getRatingStarBox = (item) => {
+        let averageRate = item.AverageRate;
+        let fullStarNum = parseInt(averageRate.toString(), 10);
+        let isNextHalf = Math.round(averageRate) !== fullStarNum;
+
+        return <RatingStarBox fullStarNum={fullStarNum}
+                              isNextHalf={isNextHalf}
+                              onStarClick={(starKey) => this.onStarClick(item, starKey)} />
     }
 
     //---------------------------------------------------------------------------------------------------------------

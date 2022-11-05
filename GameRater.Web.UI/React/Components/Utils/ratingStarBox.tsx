@@ -30,8 +30,6 @@ export default class TableContent extends React.Component<ITableContentProps, IT
 
         var objArray = [] as Array<IStarState>;
 
-        console.log(props.isNextHalf);
-
         for (var i = 1; i <= 10; i++) {
             var state = StarState.Empty;
 
@@ -79,7 +77,6 @@ export default class TableContent extends React.Component<ITableContentProps, IT
 
         for (var i = 0; i < stars.length; i++) {
             var star = stars[i];
-
             star.currentState = star.stateByRating;
         }
 

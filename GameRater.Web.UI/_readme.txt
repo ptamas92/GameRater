@@ -18,3 +18,13 @@ Download the GameRater project here:
 
 6.) Open the Package Manager Console window (View / Other Windows) and after selecting the "GameRater.Repo" project, run the following command:
 	- update-database
+
+/****************************************************************************************************************************************************************/
+
+Megjegyzések:
+
+- Az alkamazás nem a "Single Page Application" elven mûködik. A fejléc a klasszikus módon "redirect"-el. Természetesen éles környezetben nem így valósítanám meg. 
+
+- Kimaradt a "cache"-elés, amivel a kód úgy vélem, tovább optimalizálható lehetne.
+
+- A "log"-olás is kimaradt, amit legalább az alkalmazás indításakor, illetve adatbázis DML mûveletek (insert, update, delete) futtatása esetén illene naplózni.
