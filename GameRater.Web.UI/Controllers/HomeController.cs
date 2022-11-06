@@ -10,26 +10,23 @@ namespace GameRater.Controllers
         private readonly ILogger<HomeController> logger;
         private readonly AppConfig appConfig;
 
-        public HomeController( ILogger<HomeController> logger, AppConfig appConfig)
+        public HomeController(ILogger<HomeController> logger, AppConfig appConfig)
         {
             this.logger = logger;
             this.appConfig = appConfig;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(bool isLoginRequiredWarning = false)
         {
             ViewBag.SizePerPage = appConfig.SizePerPage;
-            ViewBag.IsAuthenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
+            ViewBag.IsLoginRequiredWarning = isLoginRequiredWarning;
 
             return View();
         }
 
         public IActionResult MyRatings()
         {
-            ViewBag.SizePerPage = appConfig.SizePerPage;
-            ViewBag.IsAuthenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
-
-            return View("Index");
+            return RedirectToAction("Index", new { isLoginRequiredWarning = true });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

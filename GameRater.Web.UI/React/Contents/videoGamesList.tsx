@@ -1,13 +1,12 @@
 import * as React from "react";
-import { history } from "../app";
+import { IFlashMessageModel } from "../app";
 import Table, { ITableColumn } from "../Components/Table/table";
 import RatingStarBox from "../Components/Utils/ratingStarBox";
 import * as EventHandlerService from "../Services/eventHandlerService";
 import { convertJsxToHtml } from "../Services/dataSourceFormatterService";
 
 declare var sizePerPage;
-declare var rootFullPath;
-declare var isAuthenticated;
+declare var isLoginRequiredWarning;
 declare var requestVerificationToken;
 declare var requestVerificationTokenName;
 
@@ -24,6 +23,22 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
 
         this.state = {
             locationPath: this.props.location.pathname
+        }
+    }
+
+    componentDidMount() {
+        if (isLoginRequiredWarning) {
+            var flashMessage = {
+                ResultType: "danger",
+                Message: "Log in to view the content of my ratings!",
+                TimeOut: 5000
+            } as IFlashMessageModel;
+
+            setTimeout(() => {
+                window.history.pushState({}, document.title, "/");
+
+                EventHandlerService.callEvent("event_flash_message_display", JSON.stringify(flashMessage));
+            }, 500);
         }
     }
 
@@ -147,13 +162,8 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
         var requestParams = null;
         var requestUrl = "VideoGame/GetVideoGames";
 
-        if (this.state.locationPath === "/Home/MyRatings") {
-
-            //if (!isAuthenticated)
-            //    history.push(rootFullPath + "/Home");
-
+        if (this.state.locationPath === "/Home/MyRatings") 
             requestParams = { IsFilter: true };
-        }
 
         return (
             <Table componentKey="video_game_list"

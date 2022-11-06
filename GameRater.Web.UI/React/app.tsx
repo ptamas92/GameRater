@@ -12,7 +12,7 @@ import "bootstrap-icons/font/bootstrap-icons.css"
 
 export const history = createBrowserHistory();
 
-interface IFlashMessageModel {
+export interface IFlashMessageModel {
     ResultType: string, // success, danger, info, warning
     Message: string,
     TimeOut: number

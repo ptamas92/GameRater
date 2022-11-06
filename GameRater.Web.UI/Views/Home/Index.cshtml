@@ -32,9 +32,10 @@
     var requestVerificationTokenName = "X-CSRF-TOKEN";
 
     var baseColor = "#2196F3";
-    var sizePerPage = @ViewBag.SizePerPage;
-    var isAuthenticated = "@ViewBag.IsAuthenticated".toLowerCase() === "true";
     var rootFullPath = "@Url.GetUrlRoot("~/")";
+
+    var sizePerPage = @ViewBag.SizePerPage;
+    var isLoginRequiredWarning = "@ViewBag.IsLoginRequiredWarning".toLowerCase() === "true";
 </script>
 
 <script src="~/app_bundles/App.js"></script>
