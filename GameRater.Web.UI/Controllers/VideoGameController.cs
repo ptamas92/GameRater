@@ -68,7 +68,7 @@ namespace GameRater.Web.UI.Controllers
             {
                 return new JsonResult(new RatingResponseModel()
                 {
-                    FlashMessage = new FlashMessageModel(FlashMessageType.Error, "Log in for the rating!")
+                    FlashMessage = new FlashMessageModel(FlashMessageType.Error, "Log in for the rating!", 5)
                 });
             }
 
@@ -78,7 +78,7 @@ namespace GameRater.Web.UI.Controllers
             {
                 return new JsonResult(new RatingResponseModel()
                 {
-                    FlashMessage = new FlashMessageModel(FlashMessageType.Error, "The video game does not exist!")
+                    FlashMessage = new FlashMessageModel(FlashMessageType.Error, "The video game does not exist!", 5)
                 });
             }
 

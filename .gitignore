@@ -5,6 +5,8 @@
 node_modules/*
 */wwwroot/bundles/*
 */wwwroot/app_bundles/*
+*/React/**/*.js
+*/React/**/*.js.map
 
 # These are needed, however, they're generated so don't need/want to track
 css/app.css.map
