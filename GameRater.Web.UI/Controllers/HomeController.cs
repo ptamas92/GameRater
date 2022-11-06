@@ -16,6 +16,7 @@ namespace GameRater.Controllers
             this.appConfig = appConfig;
         }
 
+        [HttpGet]
         public IActionResult Index(bool isLoginRequiredWarning = false)
         {
             ViewBag.SizePerPage = appConfig.SizePerPage;
@@ -24,9 +25,18 @@ namespace GameRater.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult MyRatings()
         {
-            return RedirectToAction("Index", new { isLoginRequiredWarning = true });
+            var isAuthenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
+
+            if (!isAuthenticated)
+                return RedirectToAction("Index", new { isLoginRequiredWarning = true });
+
+            ViewBag.SizePerPage = appConfig.SizePerPage;
+            ViewBag.IsLoginRequiredWarning = false;
+
+            return View("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

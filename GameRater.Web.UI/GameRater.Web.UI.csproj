@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <UserSecretsId>aspnet-GameRater-17CBC372-D55B-4864-8EF4-524A3624FFDC</UserSecretsId>
   </PropertyGroup>
 

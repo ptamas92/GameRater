@@ -27,6 +27,9 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
     }
 
     componentDidMount() {
+        if (window.location.href.indexOf("?isLoginRequiredWarning=True") !== -1) 
+            window.history.pushState({}, document.title, "/");
+            
         if (isLoginRequiredWarning) {
             var flashMessage = {
                 ResultType: "danger",
@@ -35,8 +38,6 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
             } as IFlashMessageModel;
 
             setTimeout(() => {
-                window.history.pushState({}, document.title, "/");
-
                 EventHandlerService.callEvent("event_flash_message_display", JSON.stringify(flashMessage));
             }, 500);
         }
