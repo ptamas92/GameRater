@@ -10,7 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import "bootstrap-icons/font/bootstrap-icons.css"
 
-const history = createBrowserHistory();
+export const history = createBrowserHistory();
 
 interface IFlashMessageModel {
     ResultType: string, // success, danger, info, warning
@@ -123,8 +123,6 @@ class App extends React.Component<{}, IAppContentStates> {
     render() {
         var alerts = this.state.flashMessageAlerts;
 
-        console.log(alerts);
-
         return (
             <React.Fragment>
                 <FlashMessageContainer id="app_main_flash_message">
@@ -133,10 +131,7 @@ class App extends React.Component<{}, IAppContentStates> {
 
                 <Router history={history as any}>
                     <Switch>
-                        <Route exact path={"/"} component={VideoGamesList} />
-                        <Route exact path={"/Home"} component={VideoGamesList} />
-                        <Route exact path={"/Home/Index"} component={VideoGamesList} />
-                        <Redirect from="*" to={"/404"} />
+                        <Route exact path={"*"} component={VideoGamesList} />
                     </Switch>
                 </Router>
             </React.Fragment>

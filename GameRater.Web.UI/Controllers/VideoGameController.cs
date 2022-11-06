@@ -6,7 +6,9 @@ using GameRater.Web.UI.Models.Common;
 using GameRater.Web.UI.Models.VideoGame;
 using GameRater.Web.UI.Utils;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace GameRater.Web.UI.Controllers
 {
@@ -36,18 +38,30 @@ namespace GameRater.Web.UI.Controllers
             var res = new GetVideoGameResponseModel();
             var isAuthenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
 
-            var dataSource = videoGameRepo.Get(null, x => x.Skip(model.DataSourceLength)
-                                                           .Take(appConfig.SizePerPage * 4)
-                                                           .OrderBy(x => x.Title))
-                                                           .Select(x => new VideoGameListItemModel()
-                                                           {
-                                                               Id = x.Id,
-                                                               Title = x.Title,
-                                                               YearOfPublication = x.YearOfPublication,
-                                                               CoverImageUrl = x.CoverImageUrl,
-                                                               Publisher = x.Publisher.Name,
-                                                               AverageRate = ratingRepo.Get(y => y.VideoGameId == x.Id).Select(y => y.Value).DefaultIfEmpty(0).Average()
-                                                           }).ToList();
+            Expression<Func<VideoGame, bool>>? filter = null;
+
+            if (isAuthenticated && model.IsFilter)
+            {
+                var userId = userService.GetCurrentUserId();
+                filter = (x => x.Ratings.Any(x => x.UserId == userId));
+            }
+
+            var ratingDict = ratingRepo.Get().GroupBy(x => x.VideoGameId).ToDictionary(x => x.Key, x => x.Average(y => y.Value));
+
+            var dataSource = videoGameRepo.Get(filter, x => x.Include(s => s.Publisher)
+                                                             .Skip(model.DataSourceLength)
+                                                             .Take(appConfig.SizePerPage * 4)
+                                                             .OrderBy(x => x.Title))
+                                                             .Select(x => new VideoGameListItemModel()
+                                                             {
+                                                                 Id = x.Id,
+                                                                 Title = x.Title,
+                                                                 Description = x.Description,
+                                                                 YearOfPublication = x.YearOfPublication,
+                                                                 CoverImageUrl = x.CoverImageUrl,
+                                                                 Publisher = x.Publisher.Name,
+                                                                 AverageRate = ratingDict.Where(y => y.Key == x.Id).Select(y => y.Value).FirstOrDefault()
+                                                             }).ToList();
 
             return new JsonResult(new GetVideoGameResponseModel()
             {
@@ -60,7 +74,7 @@ namespace GameRater.Web.UI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Rating(RatingRequestModel model)
+        public IActionResult Rating([FromBody] RatingRequestModel model)
         {
             var user = userService.GetCurrentUser();
 

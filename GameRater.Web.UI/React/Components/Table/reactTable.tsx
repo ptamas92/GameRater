@@ -54,6 +54,7 @@ const ReactTableBody = ({ data, columns, defaultColumn, expanded, currentPageDat
                                e.target.closest('.td[data-column-id="__AlwaysVisibleColumn_Expander"]') === null
                            );
 
+
         if (isExpandable) {
             var tr = e.target.closest(".tr");
             var col = tr.querySelectorAll('.td[data-column-id="__AlwaysVisibleColumn_Expander"]')[0];
@@ -174,7 +175,7 @@ const ReactTableBody = ({ data, columns, defaultColumn, expanded, currentPageDat
                                                         !isDetail || !rows[rowIndex].isExpanded ? null :
                                                             <div className="tr detail-row" data-index={itemIndex} onClick={(e) => onRowClick(item, id, e, false)}>
                                                                 <div className="td detail-col">
-                                                                    {ReactHtmlParser(item.HtmlStringForDetail)}
+                                                                    {ReactHtmlParser(item.htmlStringForDetail)}
                                                                 </div>
                                                             </div>
                                                     }

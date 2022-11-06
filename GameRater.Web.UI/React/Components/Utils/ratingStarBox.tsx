@@ -101,6 +101,7 @@ export default class TableContent extends React.Component<ITableContentProps, IT
                         return (
                             <i key={star.key}
                                data-star-index={star.key}
+                               data-action-button-key={"rating_star_" + star.key}
                                className={"star-item " + className}
                                onClick={() => this.props.onStarClick(star.key)}
                                onMouseEnter={(e) => this.onMouseEnter(e)}></i> 

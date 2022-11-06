@@ -79,10 +79,49 @@ export default class Table extends React.Component<ITableProps, ITableStates> {
 
     componentDidMount() {
         this.setDataSource();
+
+        window.addEventListener("event_refresh_datasource_item_" + this.props.componentKey, this.eventRefreshDataSourceItem);
     }
 
     componentWillUnmount() {
         this._isMounted = false;
+
+        window.removeEventListener("event_refresh_datasource_item_" + this.props.componentKey, this.eventRefreshDataSourceItem);
+    }
+
+    //---------------------------------------------------------------------------------------------------------------
+    // CUSTOM EVENTS
+    //---------------------------------------------------------------------------------------------------------------
+
+    //eventFlashMessageDisplay
+    eventRefreshDataSourceItem = (e: CustomEvent) => {
+        var newItem = JSON.parse(e.detail);
+        var propForRowKey = this.props.propForRowKey;
+
+        var dataSource = this.state.dataSource;
+        var formattedDataSource = this.state.formattedDataSource
+        var currentPageDataSource = this.state.currentPageDataSource;
+
+        dataSource.forEach(function (item) {
+            if (item[propForRowKey] === newItem[propForRowKey])
+                item = newItem;
+        });
+
+        formattedDataSource[0].objArray.forEach(function (item) {
+            if (item[propForRowKey] === newItem[propForRowKey])
+                item = newItem;
+        });
+
+        currentPageDataSource[0].objArray.forEach(function (item) {
+            if (item[propForRowKey] === newItem[propForRowKey])
+                item = newItem;
+        });
+
+        this.setState({
+            dataSource,
+            formattedDataSource,
+            currentPageDataSource
+        });
     }
 
     //---------------------------------------------------------------------------------------------------------------

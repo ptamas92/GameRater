@@ -1,20 +1,30 @@
 import * as React from "react";
-/*import $ from 'jquery';*/
+import { history } from "../app";
 import Table, { ITableColumn } from "../Components/Table/table";
 import RatingStarBox from "../Components/Utils/ratingStarBox";
 import * as EventHandlerService from "../Services/eventHandlerService";
 import { convertJsxToHtml } from "../Services/dataSourceFormatterService";
 
 declare var sizePerPage;
+declare var rootFullPath;
+declare var isAuthenticated;
 declare var requestVerificationToken;
 declare var requestVerificationTokenName;
 
-export default class Main extends React.Component<any, {}> {
+interface IVideoGamesListContentStates {
+    locationPath: string
+}
+
+export default class VideoGamesListContent extends React.Component<any, IVideoGamesListContentStates> {
 
     _isMounted: boolean = false;
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            locationPath: this.props.location.pathname
+        }
     }
 
     componentWillUnmount() {
@@ -86,8 +96,8 @@ export default class Main extends React.Component<any, {}> {
         this._isMounted = true;
 
         var params = {
-            id: item.Id,
-            value: starKey
+            Id: item.Id,
+            Value: starKey
         };
 
         fetch("/VideoGame/Rating",
@@ -100,8 +110,6 @@ export default class Main extends React.Component<any, {}> {
             .then((result) => {
                 if (this._isMounted) {
 
-                    console.log(result.FlashMessage);
-
                     if (result.FlashMessage !== null) 
                         EventHandlerService.callEvent("event_flash_message_display", JSON.stringify(result.FlashMessage));
 
@@ -109,7 +117,7 @@ export default class Main extends React.Component<any, {}> {
                         item.AverageRate = result.AverageRate;
                         item.htmlStringsForColumns.filter(x => x.key === "Rating")[0].value = this.getRatingStarBox(item);
 
-
+                        EventHandlerService.callEvent("event_refresh_datasource_item_video_game_list", JSON.stringify(item));
                     }
                 }
             }, (error) => {
@@ -136,12 +144,24 @@ export default class Main extends React.Component<any, {}> {
     render() {
         var columns = this.getCoumns();
 
+        var requestParams = null;
+        var requestUrl = "VideoGame/GetVideoGames";
+
+        if (this.state.locationPath === "/Home/MyRatings") {
+
+            //if (!isAuthenticated)
+            //    history.push(rootFullPath + "/Home");
+
+            requestParams = { IsFilter: true };
+        }
+
         return (
             <Table componentKey="video_game_list"
-                   requestUrl="VideoGame/GetVideoGames"
-                   requestParams={null}
+                   requestUrl={requestUrl}
+                   requestParams={requestParams}
                    columns={columns}
                    propForRowKey="Id"
+                   htmlTemplateOfRowDetails={convertJsxToHtml(<span>[##Obj.Description##]</span>)}
                    dataSourceFragmentSize={sizePerPage * 4}
                    isPaginationOnTheClientSide={false}
                    formattedDataSourceManipulationAfterArrivingFromTheServerSide={this.setRatingColumn} />

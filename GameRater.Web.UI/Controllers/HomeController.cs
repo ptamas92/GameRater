@@ -19,8 +19,17 @@ namespace GameRater.Controllers
         public IActionResult Index()
         {
             ViewBag.SizePerPage = appConfig.SizePerPage;
+            ViewBag.IsAuthenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
 
             return View();
+        }
+
+        public IActionResult MyRatings()
+        {
+            ViewBag.SizePerPage = appConfig.SizePerPage;
+            ViewBag.IsAuthenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
+
+            return View("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

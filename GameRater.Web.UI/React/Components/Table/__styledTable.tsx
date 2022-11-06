@@ -69,12 +69,16 @@ const StyledTableContainer = styled.div`
                 .detail-expand-down {
                     top: 2px;
                     padding-left: 6px;
-                    font-size: 12px;
+                    font-size: 14px;
                 }
 
-                &.group-col,
+                &.group-col {
+                    width: 100%;
+                }
+
                 &.detail-col {
                     width: 100%;
+                    color: #3b7ba8;
                 }
 
                 &[data-column-id="Expander"] {
@@ -109,6 +113,13 @@ const StyledTableContainer = styled.div`
                             color: ${baseColor};
                         }
                     }
+                }
+
+                .detail-expand-right,
+                .detail-expand-down {
+                    position: absolute;
+                    top: 10px;
+                    left: 12px;
                 }
             }
 

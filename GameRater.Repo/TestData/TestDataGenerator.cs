@@ -114,13 +114,27 @@ namespace GameRater.Repo.TestData
         private static string GenerateDescription(int length)
         {
             char ch;
+            var currWordLength = 0;
+            var maxWordLength = 15;
+            var legalCharacters = "abcdefghijklmnopqrstuvwxyz";
+
             var random = new Random();
             var builder = new StringBuilder();
-            var legalCharacters = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
             for (int i = 0; i < length; i++)
             {
-                ch = legalCharacters[random.Next(0, legalCharacters.Length)];
+                currWordLength++;
+
+                if (random.Next(0, 10) <= 1 || currWordLength == maxWordLength)
+                {
+                    ch = " ".ToCharArray()[0];
+                    currWordLength = 0;
+                }
+                else
+                {
+                    ch = legalCharacters[random.Next(0, legalCharacters.Length)];
+                }
+
                 builder.Append(ch);
             }
 

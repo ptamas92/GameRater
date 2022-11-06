@@ -25,6 +25,8 @@ Megjegyzések:
 
 - Az alkamazás nem a "Single Page Application" elven mûködik. A fejléc a klasszikus módon "redirect"-el. Természetesen éles környezetben nem így valósítanám meg. 
 
-- Kimaradt a "cache"-elés, amivel a kód úgy vélem, tovább optimalizálható lehetne.
+- Kimaradt a "cache"-elés, amivel a lekérdezések optimalizálhatók lehetnnének.
 
 - A "log"-olás is kimaradt, amit legalább az alkalmazás indításakor, illetve adatbázis DML mûveletek (insert, update, delete) futtatása esetén illene naplózni.
+
+- Bár a megjelenõ tartalmak "resonsive"-ak, a mobilos dizájnnal nem volt foglalkozva.
