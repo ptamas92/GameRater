@@ -21,8 +21,21 @@ body {
     position: relative;
 }
 
-/* Customized checkbox */
+/* Header */
 
+.ni-user-name {
+    padding: 6px;
+}
+
+#log_out_btn {
+    padding: 2px 5px 0 5px;
+}
+
+#log_out_btn > i {
+    font-size: 22px;
+}
+
+/* Customized checkbox */
 .customized-cb {
     position: relative;
 }

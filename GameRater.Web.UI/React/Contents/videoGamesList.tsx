@@ -10,8 +10,13 @@ declare var isLoginRequiredWarning;
 declare var requestVerificationToken;
 declare var requestVerificationTokenName;
 
+enum ContentType {
+    Home = 0,
+    MyRatings = 1
+}
+
 interface IVideoGamesListContentStates {
-    locationPath: string
+    contentType: ContentType
 }
 
 export default class VideoGamesListContent extends React.Component<any, IVideoGamesListContentStates> {
@@ -21,8 +26,13 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
     constructor(props) {
         super(props);
 
+        var contentType = ContentType.Home;
+
+        if (props.location.pathname === "/Home/MyRatings")
+            contentType = ContentType.MyRatings;
+
         this.state = {
-            locationPath: this.props.location.pathname
+            contentType: contentType
         }
     }
 
@@ -113,7 +123,8 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
 
         var params = {
             Id: item.Id,
-            Value: starKey
+            Value: starKey,
+            ContentType: this.state.contentType
         };
 
         fetch("/VideoGame/Rating",
@@ -163,7 +174,7 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
         var requestParams = null;
         var requestUrl = "VideoGame/GetVideoGames";
 
-        if (this.state.locationPath === "/Home/MyRatings") 
+        if (this.state.contentType === ContentType.MyRatings) 
             requestParams = { IsFilter: true };
 
         return (

@@ -7,7 +7,6 @@ using GameRater.Web.UI.Models.VideoGame;
 using GameRater.Web.UI.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace GameRater.Web.UI.Controllers
@@ -38,15 +37,20 @@ namespace GameRater.Web.UI.Controllers
             var res = new GetVideoGameResponseModel();
             var isAuthenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
 
+            Dictionary<int, double> ratingDict;
             Expression<Func<VideoGame, bool>>? filter = null;
 
             if (isAuthenticated && model.IsFilter)
             {
                 var userId = userService.GetCurrentUserId();
-                filter = (x => x.Ratings.Any(x => x.UserId == userId));
-            }
 
-            var ratingDict = ratingRepo.Get().GroupBy(x => x.VideoGameId).ToDictionary(x => x.Key, x => x.Average(y => y.Value));
+                filter = (x => x.Ratings.Any(x => x.UserId == userId));
+                ratingDict = ratingRepo.Get(x => x.UserId == userId).ToDictionary(x => x.VideoGameId, x => (double)x.Value);
+            }
+            else
+            {
+                ratingDict = ratingRepo.Get().GroupBy(x => x.VideoGameId).ToDictionary(x => x.Key, x => x.Average(y => y.Value));
+            }
 
             var dataSource = videoGameRepo.Get(filter, x => x.Include(s => s.Publisher)
                                                              .Skip(model.DataSourceLength)
@@ -96,7 +100,10 @@ namespace GameRater.Web.UI.Controllers
                 });
             }
 
-            var allRatings = ratingRepo.Get(x => x.VideoGameId == model.Id).ToList();
+            var allRatings = (model.ContentType == ContentType.Home) 
+                ? ratingRepo.Get(x => x.VideoGameId == model.Id).ToList()
+                : ratingRepo.Get(x => x.VideoGameId == model.Id && x.UserId == user.Id).ToList();
+
             var ownRating = allRatings.FirstOrDefault(x => x.UserId == user.Id);
 
             if (ownRating == null)
