@@ -19,7 +19,10 @@ namespace GameRater.Controllers
         [HttpGet]
         public IActionResult Index(bool isLoginRequiredWarning = false)
         {
+            var isAuthenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
+
             ViewBag.SizePerPage = appConfig.SizePerPage;
+            ViewBag.IsAuthenticated = isAuthenticated;
             ViewBag.IsLoginRequiredWarning = isLoginRequiredWarning;
 
             return View();
@@ -34,6 +37,7 @@ namespace GameRater.Controllers
                 return RedirectToAction("Index", new { isLoginRequiredWarning = true });
 
             ViewBag.SizePerPage = appConfig.SizePerPage;
+            ViewBag.IsAuthenticated = isAuthenticated;
             ViewBag.IsLoginRequiredWarning = false;
 
             return View("Index");

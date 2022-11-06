@@ -86,7 +86,7 @@ namespace GameRater.Web.UI.Controllers
             {
                 return new JsonResult(new RatingResponseModel()
                 {
-                    FlashMessage = new FlashMessageModel(FlashMessageType.Error, "Log in for the rating!", 5)
+                    FlashMessage = new FlashMessageModel(FlashMessageType.Error, "Login to rate!", 5)
                 });
             }
 

@@ -35,6 +35,7 @@
     var rootFullPath = "@Url.GetUrlRoot("~/")";
 
     var sizePerPage = @ViewBag.SizePerPage;
+    var isAuthenticated = "@ViewBag.IsAuthenticated".toLowerCase() === "true";
     var isLoginRequiredWarning = "@ViewBag.IsLoginRequiredWarning".toLowerCase() === "true";
 </script>
 

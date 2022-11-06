@@ -1,14 +1,16 @@
 import * as React from "react";
 import { IFlashMessageModel } from "../app";
+import { VideoGameList } from "./__styledContents";
 import Table, { ITableColumn } from "../Components/Table/table";
 import RatingStarBox from "../Components/Utils/ratingStarBox";
 import * as EventHandlerService from "../Services/eventHandlerService";
 import { convertJsxToHtml } from "../Services/dataSourceFormatterService";
 
-declare var sizePerPage;
-declare var isLoginRequiredWarning;
-declare var requestVerificationToken;
-declare var requestVerificationTokenName;
+declare var sizePerPage,
+            isAuthenticated,
+            isLoginRequiredWarning,
+            requestVerificationToken,
+            requestVerificationTokenName;
 
 enum ContentType {
     Home = 0,
@@ -70,7 +72,7 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
                 isAlwaysVisible: true,
                 isDisplayByDefault: true,
                 isSortable: false,
-                minWidth: 100
+                minWidth: 200
             },
             "YearOfPublication": {
                 title: "Year of publication",
@@ -78,15 +80,15 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
                 isAlwaysVisible: false,
                 isDisplayByDefault: true,
                 isSortable: false,
-                minWidth: 80
+                minWidth: 170
             },
             "CoverImageUrl": {
                 title: "Cover image",
-                htmlTemplateOfRowCell: convertJsxToHtml(<a href="[##Obj.CoverImageUrl##]" target="_blank">Link</a>),
+                htmlTemplateOfRowCell: convertJsxToHtml(<a href="[##Obj.CoverImageUrl##]" target="_blank" data-action-button-key="cover_img_Link">Link</a>),
                 isAlwaysVisible: true,
                 isDisplayByDefault: true,
                 isSortable: false,
-                minWidth: 80
+                minWidth: 170
             },
             "Publisher": {
                 title: "Publisher",
@@ -94,14 +96,15 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
                 isAlwaysVisible: false,
                 isDisplayByDefault: true,
                 isSortable: false,
-                minWidth: 80
+                minWidth: 170
             },
             "Rating": {
                 title: " ",
                 htmlTemplateOfRowCell: " ",
                 isAlwaysVisible: true,
                 isDisplayByDefault: true,
-                isSortable: false
+                isSortable: false,
+                minWidth: 250
             },
         } as Record<string, ITableColumn>;
     }
@@ -159,9 +162,18 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
         let fullStarNum = parseInt(averageRate.toString(), 10);
         let isNextHalf = Math.round(averageRate) !== fullStarNum;
 
-        return <RatingStarBox fullStarNum={fullStarNum}
-                              isNextHalf={isNextHalf}
-                              onStarClick={(starKey) => this.onStarClick(item, starKey)} />
+        return (
+            <React.Fragment>
+                <div style={{ float: "left" }}>{averageRate}</div>
+
+                <RatingStarBox fullStarNum={fullStarNum}
+                               isNextHalf={isNextHalf}
+                               isDisable={!isAuthenticated}
+                               disableHoverText="Login to rate!"
+                               onStarClick={(starKey) => this.onStarClick(item, starKey)} />
+            </React.Fragment>
+
+        )
     }
 
     //---------------------------------------------------------------------------------------------------------------
@@ -171,22 +183,30 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
     render() {
         var columns = this.getCoumns();
 
+        var title = "Video games";
         var requestParams = null;
         var requestUrl = "VideoGame/GetVideoGames";
 
-        if (this.state.contentType === ContentType.MyRatings) 
+        if (this.state.contentType === ContentType.MyRatings) {
+            title = "My ratings";
             requestParams = { IsFilter: true };
+        }
 
         return (
-            <Table componentKey="video_game_list"
-                   requestUrl={requestUrl}
-                   requestParams={requestParams}
-                   columns={columns}
-                   propForRowKey="Id"
-                   htmlTemplateOfRowDetails={convertJsxToHtml(<span>[##Obj.Description##]</span>)}
-                   dataSourceFragmentSize={sizePerPage * 4}
-                   isPaginationOnTheClientSide={false}
-                   formattedDataSourceManipulationAfterArrivingFromTheServerSide={this.setRatingColumn} />
+            <VideoGameList>
+                <h2 style={{ textAlign: "center" }}>{title}</h2>
+
+                <Table componentKey="video_game_list"
+                       requestUrl={requestUrl}
+                       requestParams={requestParams}
+                       columns={columns}
+                       propForRowKey="Id"
+                       htmlTemplateOfRowDetails={convertJsxToHtml(<span>[##Obj.Description##]</span>)}
+                       dataSourceFragmentSize={sizePerPage * 4}
+                       isPaginationOnTheClientSide={false}
+                       formattedDataSourceManipulationAfterArrivingFromTheServerSide={this.setRatingColumn} />
+            </VideoGameList>
+           
         )
     }
 }

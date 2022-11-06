@@ -106,9 +106,23 @@ const StyledFlashMessageContainer = styled.div`
 const StyledRatingStarBox = styled.div`
     text-align: right;
     
-    > i {
+    i {
         cursor: pointer;
         color: #ffb700;
+    }
+
+    .rsb-container.disabled .rsbc-disable-hover-text {
+        min-width: 160px;
+        float: right;
+    }
+
+    .rsb-container.disabled:hover .rsbc-stars {
+        display: none;
+    }
+
+    .rsb-container:not(.disabled) .rsbc-disable-hover-text,
+    .rsb-container.disabled:not(:hover) .rsbc-disable-hover-text {
+        display: none;
     }
 `;
 

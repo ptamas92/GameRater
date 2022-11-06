@@ -16,6 +16,8 @@ enum StarState {
 interface ITableContentProps {
     fullStarNum: number,
     isNextHalf: boolean,
+    isDisable?: boolean,
+    disableHoverText?: string,
     onStarClick: (starKey: number) => void
 }
 
@@ -55,34 +57,44 @@ export default class TableContent extends React.Component<ITableContentProps, IT
     // Functions
     //---------------------------------------------------------------------------------------------------------------
 
-    //onMouseEnter
-    onMouseEnter = (e) => {
-        var currStarIndex = parseInt(e.target.getAttribute("data-star-index"));
-        var stars = this.state.stars;
-
-        for (var i = 0; i < stars.length; i++) {
-            var star = stars[i];
-
-            star.currentState = star.key <= currStarIndex ? StarState.Fill : StarState.Empty;
-        }
-
-        this.setState({
-            stars: stars
-        });
+    //onClick
+    onClick = (key) => {
+        if (!this.props.isDisable)
+            this.props.onStarClick(key);
     }
 
-    //onMouseLeave
-    onMouseLeave = () => {
-        var stars = this.state.stars;
+    //onStarMouseEnter
+    onStarMouseEnter = (e) => {
+        if (!this.props.isDisable) {
+            var currStarIndex = parseInt(e.target.getAttribute("data-star-index"));
+            var stars = this.state.stars;
 
-        for (var i = 0; i < stars.length; i++) {
-            var star = stars[i];
-            star.currentState = star.stateByRating;
+            for (var i = 0; i < stars.length; i++) {
+                var star = stars[i];
+
+                star.currentState = star.key <= currStarIndex ? StarState.Fill : StarState.Empty;
+            }
+
+            this.setState({
+                stars: stars
+            });
         }
+    }
 
-        this.setState({
-            stars: stars
-        });
+    //onStarsBoxMouseLeave
+    onStarsBoxMouseLeave = () => {
+        if (!this.props.isDisable) {
+            var stars = this.state.stars;
+
+            for (var i = 0; i < stars.length; i++) {
+                var star = stars[i];
+                star.currentState = star.stateByRating;
+            }
+
+            this.setState({
+                stars: stars
+            });
+        }
     }
 
     //---------------------------------------------------------------------------------------------------------------
@@ -91,23 +103,32 @@ export default class TableContent extends React.Component<ITableContentProps, IT
 
     render() {
         var stars = this.state.stars;
+        var isDisable = this.props.isDisable;
+        var disableHoverText = this.props.disableHoverText ?? "";
 
         return (
-            <RatingStarBox onMouseLeave={this.onMouseLeave}>
-                {
-                    stars && stars.map(star => {
-                        var className = star.currentState === StarState.Empty ? "bi bi-star" : (star.currentState === StarState.Fill ? "bi bi-star-fill" : "bi bi-star-half");
+            <RatingStarBox>
+                <span className={"rsb-container" + (isDisable ? " disabled" : "")}>
+                    <div className="rsbc-disable-hover-text">{disableHoverText}</div>
 
-                        return (
-                            <i key={star.key}
-                               data-star-index={star.key}
-                               data-action-button-key={"rating_star_" + star.key}
-                               className={"star-item " + className}
-                               onClick={() => this.props.onStarClick(star.key)}
-                               onMouseEnter={(e) => this.onMouseEnter(e)}></i> 
-                        )
-                    })
-                }
+                    <span className="rsbc-stars" onMouseLeave={this.onStarsBoxMouseLeave}>
+                        {
+                             stars && stars.map(star => {
+                                 var className = star.currentState === StarState.Empty ? "bi bi-star" : (star.currentState === StarState.Fill ? "bi bi-star-fill" : "bi bi-star-half");
+
+                                 return (
+                                     <i key={star.key}
+                                        data-star-index={star.key}
+                                        data-action-button-key={"rating_star_" + star.key}
+                                        title={star.key.toString()}
+                                        className={"star-item " + className}
+                                        onClick={() => this.onClick(star.key)}
+                                        onMouseEnter={(e) => this.onStarMouseEnter(e)}></i>
+                                 )
+                             })
+                        }
+                    </span>
+                </span>
             </RatingStarBox>
         )
     }
