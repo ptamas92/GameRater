@@ -43,7 +43,8 @@ interface ITableStates {
     currentPageDataSource: Array<any>,
     isMoreDataSourceFragment: boolean,
     propForSorting: string,
-    isAscendingSort: boolean
+    isAscendingSort: boolean,
+    requestParams: any
 }
 
 export default class Table extends React.Component<ITableProps, ITableStates> {
@@ -72,6 +73,7 @@ export default class Table extends React.Component<ITableProps, ITableStates> {
             formattedDataSource: null,
             currentPageDataSource: null,
             isMoreDataSourceFragment: false,
+            requestParams: props.requestParams,
             propForSorting: props.propForSortingByDefault ? props.propForSortingByDefault : "",
             isAscendingSort: props.isAscendingSortByDefault ? props.isAscendingSortByDefault : false
         };
@@ -195,10 +197,33 @@ export default class Table extends React.Component<ITableProps, ITableStates> {
     // FUNCTIONS
     //---------------------------------------------------------------------------------------------------------------
 
+    //dataSourceReload
+    dataSourceReload = (requestParams) => {
+
+        var bodyParams = this.props.requestParams ?? {};
+        var isObj = typeof requestParams === 'object' && requestParams !== null && !Array.isArray(requestParams);
+
+        if (isObj) {
+            for (const prop in requestParams)
+                bodyParams[prop] = requestParams[prop];
+        }
+
+        this.setState({
+            activePage: 1,
+            dataSource: null,
+            formattedDataSource: null,
+            currentPageDataSource: null,
+            isMoreDataSourceFragment: false,
+            requestParams: bodyParams
+        }, () => {
+            this.setDataSource();
+        });
+    }
+
     //setDataSource
     setDataSource = () => {
         var path = this.props.requestUrl;
-        var params = this.props.requestParams ?? {};
+        var params = this.state.requestParams ?? {};
 
         params["sortedBy"] = this.state.propForSorting;
         params["isAscending"] = this.state.isAscendingSort;

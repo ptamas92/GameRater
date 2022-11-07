@@ -1,4 +1,4 @@
-Download the GameRater project here:
+0.) Download the GameRater project here:
 	- https://github.com/ptamas92/GameRater
 
 1.) Install Node.js from here:
@@ -21,15 +21,15 @@ Download the GameRater project here:
 
 /****************************************************************************************************************************************************************/
 
+username: test@email.com / test2@email.com
+password: #Aaaaaa1
+
+/****************************************************************************************************************************************************************/
+
 Megjegyzések:
 
-- Az alkamazás nem a "Single Page Application" elven mûködik. A fejléc a klasszikus módon "redirect"-el. Természetesen éles környezetben nem így valósítanám meg. 
+- Az alkamazás nem minden tekintetben mûködik a "Single Page Application" elven. A fejléc, a klasszikus módon "redirect"-el. Természetesen éles környezetben nem így valósítanám meg. 
 
 - Kimaradt a "cache"-elés, amivel a lekérdezések optimalizálhatók lehetnnének.
 
 - A "log"-olás is kimaradt, amit legalább az alkalmazás indításakor, illetve adatbázis DML mûveletek (insert, update, delete) futtatása esetén illene naplózni.
-
-- Bár a megjelenõ tartalmak "resonsive"-ak, a mobilos dizájnnal nem volt foglalkozva.
-
-
-nyelvesítés

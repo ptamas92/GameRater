@@ -8,6 +8,7 @@ using GameRater.Web.UI.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using System.Security.Policy;
 
 namespace GameRater.Web.UI.Controllers
 {
@@ -40,15 +41,20 @@ namespace GameRater.Web.UI.Controllers
             Dictionary<int, double> ratingDict;
             Expression<Func<VideoGame, bool>>? filter = null;
 
-            if (isAuthenticated && model.IsFilter)
+            if (isAuthenticated && model.IsFilteredByUser)
             {
                 var userId = userService.GetCurrentUserId();
 
-                filter = (x => x.Ratings.Any(x => x.UserId == userId));
+                filter = model.PublisherIdFilter != null ? (x => x.PublisherId == model.PublisherIdFilter && x.Ratings.Any(y => y.UserId == userId))
+                                                         : (x => x.Ratings.Any(y => y.UserId == userId));
+
                 ratingDict = ratingRepo.Get(x => x.UserId == userId).ToDictionary(x => x.VideoGameId, x => (double)x.Value);
             }
             else
             {
+                if (model.PublisherIdFilter != null)
+                    filter = (x => x.PublisherId == model.PublisherIdFilter); 
+                
                 ratingDict = ratingRepo.Get().GroupBy(x => x.VideoGameId).ToDictionary(x => x.Key, x => x.Average(y => y.Value));
             }
 
@@ -63,6 +69,7 @@ namespace GameRater.Web.UI.Controllers
                                                                  Description = x.Description,
                                                                  YearOfPublication = x.YearOfPublication,
                                                                  CoverImageUrl = x.CoverImageUrl,
+                                                                 PublisherId = x.PublisherId,
                                                                  Publisher = x.Publisher.Name,
                                                                  AverageRate = ratingDict.Where(y => y.Key == x.Id).Select(y => y.Value).FirstOrDefault()
                                                              }).ToList();
@@ -153,6 +160,7 @@ namespace GameRater.Web.UI.Controllers
                 Description = x.Description,
                 YearOfPublication = x.YearOfPublication,
                 CoverImageUrl = x.CoverImageUrl,
+                PublisherId = x.PublisherId,
                 Publisher = x.Publisher.Name,
                 AverageRate = rating?.Value ?? 0
             }).FirstOrDefault();

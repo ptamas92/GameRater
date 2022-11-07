@@ -36,7 +36,7 @@ a {
 }
 
 #log_out_btn > i {
-    font-size: 22px;
+    font-size: 23px;
 }
 
 .navbar-brand {
@@ -44,7 +44,7 @@ a {
 }
 
 .navbar ul > li.nav-item .nav-link:hover {
-    font-weight: bold;
+    color: #2196F3 !important;
 }
 
 /* Customized checkbox */

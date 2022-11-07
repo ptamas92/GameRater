@@ -17,9 +17,12 @@ interface IVideoGamesListContentStates {
 export default class VideoGamesListContent extends React.Component<any, IVideoGamesListContentStates> {
 
     _isMounted: boolean = false;
+    _tableRef: React.RefObject<Table>;
 
     constructor(props) {
         super(props);
+
+        this._tableRef = React.createRef();
 
         var contentType = ContentType.Home;
 
@@ -54,8 +57,15 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
     onRowClick = (obj: any, rowId: string, e: React.MouseEvent<Element, MouseEvent>) => {
         var attr = (e.target as any).getAttribute("data-action-button-key");
 
-        if (attr && attr === "video_game_title")
+        if (attr && attr === "video_game_title") {
             history.push("/Home/VideoGame?id=" + obj.Id);
+        }
+        else if (attr && attr === "video_game_publisher") {
+            this._tableRef.current.dataSourceReload({
+                IsFilteredByUser: false,
+                PublisherIdFilter: obj.PublisherId
+            });
+        }
     }
 
     //onStarClick
@@ -108,7 +118,7 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
             },
             "Publisher": {
                 title: "Publisher",
-                htmlTemplateOfRowCell: null,
+                htmlTemplateOfRowCell: convertJsxToHtml(<span className="video-game-publisher" data-action-button-key="video_game_publisher">[##Obj.Publisher##]</span>),
                 isAlwaysVisible: false,
                 isDisplayByDefault: true,
                 isSortable: false,
@@ -168,14 +178,15 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
 
         if (this.state.contentType === ContentType.MyRatings) {
             title = "My ratings";
-            requestParams = { IsFilter: true };
+            requestParams = { IsFilteredByUser: true };
         }
 
         return (
             <VideoGameList>
                 <h2 style={{ textAlign: "center" }}>{title}</h2>
 
-                <Table componentKey="video_game_list"
+                <Table ref={this._tableRef}
+                       componentKey="video_game_list"
                        requestUrl={requestUrl}
                        requestParams={requestParams}
                        columns={columns}
