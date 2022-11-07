@@ -8,8 +8,33 @@ const StyledVideoGameList = styled.div`
         text-align: right;
     }
 
-    .td > .video-game-title:not(.disabled):hover {
+    .td > .video-game-title:not(.disabled):hover,
+    .td > .video-game-publisher:hover{
         color: ${baseColor};
+    }
+
+    button.delete-filter {
+        position: absolute;
+        left: 60px;
+        top: 62px;
+        width: 36px;
+        height: 36px;
+        padding: 6px 8px;
+        background: #FFF;
+        border-radius: 4px;
+        color: ${baseColor};
+        box-shadow: none;
+        border: 1px solid ${baseColor};
+
+        &[disabled] {
+            color: #858585;
+            border: 1px solid #858585;
+        }
+
+        &:not([disabled]):hover {
+            color: white;
+            background: ${baseColor};
+        }
     }
 `;
 

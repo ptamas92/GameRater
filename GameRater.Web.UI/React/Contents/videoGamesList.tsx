@@ -11,7 +11,8 @@ import { convertJsxToHtml } from "../Services/dataSourceFormatterService";
 declare var sizePerPage, isAuthenticated, isLoginRequiredWarning;
 
 interface IVideoGamesListContentStates {
-    contentType: ContentType
+    contentType: ContentType,
+    isDeleteFilterBtnEnable: boolean
 }
 
 export default class VideoGamesListContent extends React.Component<any, IVideoGamesListContentStates> {
@@ -30,7 +31,8 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
             contentType = ContentType.MyRatings;
 
         this.state = {
-            contentType: contentType
+            contentType: contentType,
+            isDeleteFilterBtnEnable: false
         }
     }
 
@@ -62,8 +64,11 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
         }
         else if (attr && attr === "video_game_publisher") {
             this._tableRef.current.dataSourceReload({
-                IsFilteredByUser: false,
                 PublisherIdFilter: obj.PublisherId
+            });
+
+            this.setState({
+                isDeleteFilterBtnEnable: true
             });
         }
     }
@@ -81,6 +86,17 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
 
                 EventHandlerService.callEvent("event_refresh_datasource_item_video_game_list", JSON.stringify(item));
             }
+        });
+    }
+
+    //onDeleteFilterCilck
+    onDeleteFilterCilck = () => {
+        this._tableRef.current.dataSourceReload({
+            PublisherIdFilter: null
+        });
+
+        this.setState({
+            isDeleteFilterBtnEnable: false
         });
     }
 
@@ -171,6 +187,7 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
 
     render() {
         var columns = this.getCoumns();
+        var isDeleteFilterBtnEnable = this.state.isDeleteFilterBtnEnable;
 
         var title = "Video games";
         var requestParams = null;
@@ -184,6 +201,10 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
         return (
             <VideoGameList>
                 <h2 style={{ textAlign: "center" }}>{title}</h2>
+
+                <button className="delete-filter" title="Delete filter" onClick={this.onDeleteFilterCilck} disabled={!isDeleteFilterBtnEnable}>
+                    <i className="bi bi-x"></i>
+                </button>
 
                 <Table ref={this._tableRef}
                        componentKey="video_game_list"
