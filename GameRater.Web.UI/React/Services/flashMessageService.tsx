@@ -25,9 +25,9 @@ export function show(type: any, message: string, timeOutInMilliseconds?: number)
     }
 
     var obj = {
-        resultType: resultType,
-        message: message,
-        timeOut: timeOutInMilliseconds !== null ? timeOutInMilliseconds : 0
+        ResultType: resultType,
+        Message: message,
+        TimeOut: timeOutInMilliseconds !== null ? timeOutInMilliseconds : 0
     }
 
     EventHandlerService.callEvent("event_flash_message_display", JSON.stringify(obj));

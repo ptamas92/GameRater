@@ -1,10 +1,13 @@
 import * as React from "react";
-import { IFlashMessageModel } from "../app";
+import { history } from "../app";
 import { VideoGameList } from "./__styledContents";
 import Table, { ITableColumn } from "../Components/Table/table";
 import RatingStarBox from "../Components/Utils/ratingStarBox";
+import * as FlashMessageService from "../Services/flashMessageService";
 import * as EventHandlerService from "../Services/eventHandlerService";
 import { convertJsxToHtml } from "../Services/dataSourceFormatterService";
+
+import * as VideoGameService from "../Services/videoGameService";
 
 declare var sizePerPage,
             isAuthenticated,
@@ -43,20 +46,48 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
             window.history.pushState({}, document.title, "/");
             
         if (isLoginRequiredWarning) {
-            var flashMessage = {
-                ResultType: "danger",
-                Message: "Log in to view the content of my ratings!",
-                TimeOut: 5000
-            } as IFlashMessageModel;
-
             setTimeout(() => {
-                EventHandlerService.callEvent("event_flash_message_display", JSON.stringify(flashMessage));
+                FlashMessageService.show(FlashMessageService.IFlashMessageType.Error, "Log in to view the content of my ratings!", 5000);
             }, 500);
         }
     }
 
     componentWillUnmount() {
         this._isMounted = false;
+    }
+
+    //---------------------------------------------------------------------------------------------------------------
+    // Events
+    //---------------------------------------------------------------------------------------------------------------
+
+    //onRowClick
+    onRowClick = (obj: any, rowId: string, e: React.MouseEvent<Element, MouseEvent>) => {
+        var attr = (e.target as any).getAttribute("data-action-button-key");
+
+        if (attr && attr === "video_game_title")
+            history.push("/Home/VideoGame?id=" + obj.Id);
+    }
+
+    //onStarClick
+    onStarClick = (item, starKey) => {
+        this._isMounted = true;
+
+        var contentType = this.state.contentType;
+
+        var params = {
+            Id: item.Id,
+            Value: starKey,
+            ContentType: this.state.contentType
+        };
+
+        VideoGameService.rating(item, starKey, contentType).then((result) => {
+            if (this._isMounted && result.AverageRate) {
+                item.AverageRate = result.AverageRate;
+                item.htmlStringsForColumns.filter(x => x.key === "Rating")[0].value = this.getRatingStarBox(item);
+
+                EventHandlerService.callEvent("event_refresh_datasource_item_video_game_list", JSON.stringify(item));
+            }
+        });
     }
 
     //---------------------------------------------------------------------------------------------------------------
@@ -68,7 +99,8 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
         return {
             "Title": {
                 title: "Title",
-                htmlTemplateOfRowCell: null,
+                htmlTemplateOfRowCell: convertJsxToHtml(isAuthenticated ? <span className="video-game-title" data-action-button-key="video_game_title">[##Obj.Title##]</span>
+                                                                        : <span className="video-game-title disabled">[##Obj.Title##]</span>),
                 isAlwaysVisible: true,
                 isDisplayByDefault: true,
                 isSortable: false,
@@ -99,7 +131,7 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
                 minWidth: 170
             },
             "Rating": {
-                title: " ",
+                title: "Rating",
                 htmlTemplateOfRowCell: " ",
                 isAlwaysVisible: true,
                 isDisplayByDefault: true,
@@ -118,43 +150,6 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
         });
 
         return ds;
-    }
-
-    //onStarClick
-    onStarClick = (item, starKey) => {
-        this._isMounted = true;
-
-        var params = {
-            Id: item.Id,
-            Value: starKey,
-            ContentType: this.state.contentType
-        };
-
-        fetch("/VideoGame/Rating",
-            {
-                method: 'post',
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', [requestVerificationTokenName]: requestVerificationToken },
-                body: JSON.stringify(params)
-            })
-            .then(res => res.json())
-            .then((result) => {
-                if (this._isMounted) {
-
-                    if (result.FlashMessage !== null) 
-                        EventHandlerService.callEvent("event_flash_message_display", JSON.stringify(result.FlashMessage));
-
-                    if (result.AverageRate) {
-                        item.AverageRate = result.AverageRate;
-                        item.htmlStringsForColumns.filter(x => x.key === "Rating")[0].value = this.getRatingStarBox(item);
-
-                        EventHandlerService.callEvent("event_refresh_datasource_item_video_game_list", JSON.stringify(item));
-                    }
-                }
-            }, (error) => {
-                console.log(error);
-
-                return null;
-            })
     }
 
     getRatingStarBox = (item) => {
@@ -204,7 +199,8 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
                        htmlTemplateOfRowDetails={convertJsxToHtml(<span>[##Obj.Description##]</span>)}
                        dataSourceFragmentSize={sizePerPage * 4}
                        isPaginationOnTheClientSide={false}
-                       formattedDataSourceManipulationAfterArrivingFromTheServerSide={this.setRatingColumn} />
+                       formattedDataSourceManipulationAfterArrivingFromTheServerSide={this.setRatingColumn}
+                       onRowClick={this.onRowClick} />
             </VideoGameList>
            
         )

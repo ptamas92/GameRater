@@ -30,3 +30,6 @@ Megjegyzések:
 - A "log"-olás is kimaradt, amit legalább az alkalmazás indításakor, illetve adatbázis DML mûveletek (insert, update, delete) futtatása esetén illene naplózni.
 
 - Bár a megjelenõ tartalmak "resonsive"-ak, a mobilos dizájnnal nem volt foglalkozva.
+
+
+nyelvesítés

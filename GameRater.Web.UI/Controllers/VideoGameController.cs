@@ -32,9 +32,9 @@ namespace GameRater.Web.UI.Controllers
         /*************************************************************************************************************************************************************/
 
         [HttpGet]
-        public IActionResult GetVideoGames(GetVideoGameRequestModel model)
+        public IActionResult GetVideoGames(GetVideoGamesRequestModel model)
         {
-            var res = new GetVideoGameResponseModel();
+            var res = new GetVideoGamesResponseModel();
             var isAuthenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
 
             Dictionary<int, double> ratingDict;
@@ -67,7 +67,7 @@ namespace GameRater.Web.UI.Controllers
                                                                  AverageRate = ratingDict.Where(y => y.Key == x.Id).Select(y => y.Value).FirstOrDefault()
                                                              }).ToList();
 
-            return new JsonResult(new GetVideoGameResponseModel()
+            return new JsonResult(new GetVideoGamesResponseModel()
             {
                 DataSource = dataSource,
                 IsAuthenticated = isAuthenticated
@@ -124,6 +124,49 @@ namespace GameRater.Web.UI.Controllers
             return new JsonResult(new RatingResponseModel()
             {
                 AverageRate = allRatings.Where(x => x.UserId != user.Id).Select(x => x.Value).Concat(new List<int>() { model.Value }).Average()
+            });
+        }
+
+        /*************************************************************************************************************************************************************/
+
+        [HttpGet]
+        public IActionResult GetVideoGame(GetVideoGameRequestModel model)
+        {
+            var isAuthenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
+
+            if (!isAuthenticated)
+            {
+                return new JsonResult(new GetVideoGameResponseModel()
+                {
+                    FlashMessage = new FlashMessageModel(FlashMessageType.Error, "Login to rate!", 5)
+                });
+            }
+
+            var userId = userService.GetCurrentUserId();
+            var rating = ratingRepo.Get(x => x.UserId == userId && x.VideoGameId == model.Id).FirstOrDefault();
+
+            var dataSource = videoGameRepo.Get(x => x.Id == model.Id, null, "Publisher").Select(x => new VideoGameListItemModel()
+            {
+                Id = x.Id,
+                Title = x.Title,
+                Description = x.Description,
+                YearOfPublication = x.YearOfPublication,
+                CoverImageUrl = x.CoverImageUrl,
+                Publisher = x.Publisher.Name,
+                AverageRate = rating?.Value ?? 0
+            }).FirstOrDefault();
+
+            if (dataSource == null)
+            {
+                return new JsonResult(new GetVideoGameResponseModel()
+                {
+                    FlashMessage = new FlashMessageModel(FlashMessageType.Error, "The video game doesn't exist!", 5)
+                });
+            }
+
+            return new JsonResult(new GetVideoGameResponseModel()
+            {
+                DataSource = dataSource
             });
         }
     }

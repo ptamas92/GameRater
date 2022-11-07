@@ -21,6 +21,10 @@ body {
     position: relative;
 }
 
+a {
+    color: #2196F3 !important;
+}
+
 /* Header */
 
 .ni-user-name {
@@ -33,6 +37,14 @@ body {
 
 #log_out_btn > i {
     font-size: 22px;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.navbar ul > li.nav-item .nav-link:hover {
+    font-weight: bold;
 }
 
 /* Customized checkbox */

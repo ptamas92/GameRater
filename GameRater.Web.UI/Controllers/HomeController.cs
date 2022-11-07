@@ -19,11 +19,7 @@ namespace GameRater.Controllers
         [HttpGet]
         public IActionResult Index(bool isLoginRequiredWarning = false)
         {
-            var isAuthenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
-
-            ViewBag.SizePerPage = appConfig.SizePerPage;
-            ViewBag.IsAuthenticated = isAuthenticated;
-            ViewBag.IsLoginRequiredWarning = isLoginRequiredWarning;
+            SetViewBag(isLoginRequiredWarning, out _);
 
             return View();
         }
@@ -31,14 +27,21 @@ namespace GameRater.Controllers
         [HttpGet]
         public IActionResult MyRatings()
         {
-            var isAuthenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
+            SetViewBag(false, out bool isAuthenticated);
 
             if (!isAuthenticated)
                 return RedirectToAction("Index", new { isLoginRequiredWarning = true });
 
-            ViewBag.SizePerPage = appConfig.SizePerPage;
-            ViewBag.IsAuthenticated = isAuthenticated;
-            ViewBag.IsLoginRequiredWarning = false;
+            return View("Index");
+        }
+
+        [HttpGet]
+        public IActionResult VideoGame(int id)
+        {
+            SetViewBag(false, out bool isAuthenticated);
+
+            if (!isAuthenticated)
+                return RedirectToAction("Index", new { isLoginRequiredWarning = true });
 
             return View("Index");
         }
@@ -47,6 +50,17 @@ namespace GameRater.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        /******************************************************************************************************************************/
+
+        private void SetViewBag(bool isWarning, out bool isAuthenticated)
+        {
+            isAuthenticated = HttpContext.User.Identity?.IsAuthenticated ?? false;
+
+            ViewBag.SizePerPage = appConfig.SizePerPage;
+            ViewBag.IsAuthenticated = isAuthenticated;
+            ViewBag.IsLoginRequiredWarning = isWarning;
         }
     }
 }

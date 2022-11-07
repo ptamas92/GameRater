@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 import { AlertList } from "react-bs-notifier";
 import { createBrowserHistory } from "history";
 import { Router, Route, Redirect, Switch } from "react-router";
+import VideoGame from "./Contents/videoGame";
 import VideoGamesList from "./Contents/videoGamesList";
 import { FlashMessageContainer } from "./Components/Utils/__styledUtils"
 
@@ -131,6 +132,7 @@ class App extends React.Component<{}, IAppContentStates> {
 
                 <Router history={history as any}>
                     <Switch>
+                        <Route exact path={"/Home/VideoGame"} component={VideoGame} />
                         <Route exact path={"*"} component={VideoGamesList} />
                     </Switch>
                 </Router>

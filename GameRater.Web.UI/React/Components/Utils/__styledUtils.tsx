@@ -44,7 +44,7 @@ const StyledPaginationContainer = styled.div`
 
         > .active > a, > .active > span, > .active > a:hover, > .active > span:hover, > .active > a:focus, > .active > span:focus {
             z-index: 3;
-            color: #fff;
+            color: #fff !important;
             background-color: ${baseColor};
             cursor: default;
         }
