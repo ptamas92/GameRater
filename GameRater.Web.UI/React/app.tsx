@@ -13,6 +13,12 @@ import "bootstrap-icons/font/bootstrap-icons.css"
 
 export const history = createBrowserHistory();
 
+export enum ContentType {
+    Home = 0,
+    MyRatings = 1,
+    VideoGame = 2
+}
+
 export interface IFlashMessageModel {
     ResultType: string, // success, danger, info, warning
     Message: string,

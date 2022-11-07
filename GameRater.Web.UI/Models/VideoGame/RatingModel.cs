@@ -5,7 +5,8 @@ namespace GameRater.Web.UI.Models.VideoGame
     public enum ContentType
     {
         Home = 0,
-        MyRatings = 1
+        MyRatings = 1,
+        VideoGame = 2
     }
 
     public class RatingRequestModel

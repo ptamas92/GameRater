@@ -123,7 +123,8 @@ namespace GameRater.Web.UI.Controllers
 
             return new JsonResult(new RatingResponseModel()
             {
-                AverageRate = allRatings.Where(x => x.UserId != user.Id).Select(x => x.Value).Concat(new List<int>() { model.Value }).Average()
+                AverageRate = allRatings.Where(x => x.UserId != user.Id).Select(x => x.Value).Concat(new List<int>() { model.Value }).Average(),
+                FlashMessage = new FlashMessageModel(FlashMessageType.Success, "The rating was successful!", 3)
             });
         }
 

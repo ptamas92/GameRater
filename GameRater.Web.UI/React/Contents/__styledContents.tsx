@@ -4,6 +4,10 @@ declare var baseColor;
 
 //StyledVideoGameList
 const StyledVideoGameList = styled.div`
+    .rating-star-box {
+        text-align: right;
+    }
+
     .td > .video-game-title:not(.disabled):hover {
         color: ${baseColor};
     }

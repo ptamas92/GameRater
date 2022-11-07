@@ -30,6 +30,34 @@ export default class TableContent extends React.Component<ITableContentProps, IT
     constructor(props) {
         super(props);
 
+        this.state = {
+            stars: this.getStarsState(props)
+        }; 
+    }
+
+    componentWillReceiveProps(newProps) {
+        var isChanged = false;
+
+        for (const p in newProps) {
+            if (newProps[p] !== this.props[p]) {
+                isChanged = true;
+                break;
+            }
+        }
+
+        if (isChanged) {
+            this.setState({
+                stars: this.getStarsState(newProps)
+            });
+        }
+    }
+
+    //---------------------------------------------------------------------------------------------------------------
+    // Functions
+    //---------------------------------------------------------------------------------------------------------------
+
+    //getStarsState
+    getStarsState = (props: ITableContentProps) => {
         var objArray = [] as Array<IStarState>;
 
         for (var i = 1; i <= 10; i++) {
@@ -48,13 +76,11 @@ export default class TableContent extends React.Component<ITableContentProps, IT
             });
         }
 
-        this.state = {
-            stars: objArray
-        };
+        return objArray;
     }
 
     //---------------------------------------------------------------------------------------------------------------
-    // Functions
+    // Events
     //---------------------------------------------------------------------------------------------------------------
 
     //onClick
@@ -107,7 +133,7 @@ export default class TableContent extends React.Component<ITableContentProps, IT
         var disableHoverText = this.props.disableHoverText ?? "";
 
         return (
-            <RatingStarBox>
+            <RatingStarBox className="rating-star-box">
                 <span className={"rsb-container" + (isDisable ? " disabled" : "")}>
                     <div className="rsbc-disable-hover-text">{disableHoverText}</div>
 

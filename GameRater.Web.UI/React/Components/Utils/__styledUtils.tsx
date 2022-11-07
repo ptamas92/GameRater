@@ -104,8 +104,6 @@ const StyledFlashMessageContainer = styled.div`
 
 //StyledRatingStarBox
 const StyledRatingStarBox = styled.div`
-    text-align: right;
-    
     i {
         cursor: pointer;
         color: #ffb700;

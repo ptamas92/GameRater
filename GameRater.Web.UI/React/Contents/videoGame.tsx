@@ -1,7 +1,8 @@
 import * as React from "react";
-import { history } from "../app";
+import { history, ContentType } from "../app";
 import { VideoGame } from "./__styledContents";
 import RatingStarBox from "../Components/Utils/ratingStarBox";
+import * as VideoGameService from "../Services/videoGameService";
 import * as FlashMessageService from "../Services/flashMessageService";
 import * as EventHandlerService from "../Services/eventHandlerService";
 
@@ -86,7 +87,17 @@ export default class VideoGameContent extends React.Component<any, IVideoGameont
 
     //onStarClick
     onStarClick = (item, starKey) => {
+        VideoGameService.rating(item, starKey, ContentType.VideoGame).then((result) => {
+            if (this._isMounted && result.AverageRate) {
+                var dataSource = this.state.dataSource;
 
+                dataSource.AverageRate = result.AverageRate;
+
+                this.setState({
+                    dataSource
+                });
+            }
+        });
     }
 
     //---------------------------------------------------------------------------------------------------------------
@@ -96,11 +107,11 @@ export default class VideoGameContent extends React.Component<any, IVideoGameont
     render() {
         var obj = this.state.dataSource;
 
-        var averageRate = obj.AverageRate;
-        var fullStarNum = parseInt(averageRate.toString(), 10);
-        var isNextHalf = Math.round(averageRate) !== fullStarNum;
-
         if (obj) {
+            var averageRate = obj.AverageRate;
+            var fullStarNum = parseInt(averageRate.toString(), 10);
+            var isNextHalf = Math.round(averageRate) !== fullStarNum;
+
             return (
                 <VideoGame>
                     <h2 style={{ textAlign: "center" }}>Video game</h2>

@@ -1,24 +1,14 @@
 import * as React from "react";
-import { history } from "../app";
+import { history, ContentType } from "../app";
 import { VideoGameList } from "./__styledContents";
 import Table, { ITableColumn } from "../Components/Table/table";
 import RatingStarBox from "../Components/Utils/ratingStarBox";
+import * as VideoGameService from "../Services/videoGameService";
 import * as FlashMessageService from "../Services/flashMessageService";
 import * as EventHandlerService from "../Services/eventHandlerService";
 import { convertJsxToHtml } from "../Services/dataSourceFormatterService";
 
-import * as VideoGameService from "../Services/videoGameService";
-
-declare var sizePerPage,
-            isAuthenticated,
-            isLoginRequiredWarning,
-            requestVerificationToken,
-            requestVerificationTokenName;
-
-enum ContentType {
-    Home = 0,
-    MyRatings = 1
-}
+declare var sizePerPage, isAuthenticated, isLoginRequiredWarning;
 
 interface IVideoGamesListContentStates {
     contentType: ContentType
@@ -73,12 +63,6 @@ export default class VideoGamesListContent extends React.Component<any, IVideoGa
         this._isMounted = true;
 
         var contentType = this.state.contentType;
-
-        var params = {
-            Id: item.Id,
-            Value: starKey,
-            ContentType: this.state.contentType
-        };
 
         VideoGameService.rating(item, starKey, contentType).then((result) => {
             if (this._isMounted && result.AverageRate) {
