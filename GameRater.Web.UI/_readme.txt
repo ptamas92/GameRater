@@ -30,6 +30,6 @@ Megjegyzések:
 
 - Az alkamazás nem minden tekintetben mûködik a "Single Page Application" elven. A fejléc, a klasszikus módon "redirect"-el. Természetesen éles környezetben nem így valósítanám meg. 
 
-- Kimaradt a "cache"-elés, amivel a lekérdezések optimalizálhatók lehetnnének.
+- A "cache"-eléssel nem foglalkoztam, amivel a lekérdezések optimalizálhatók lehetnnének.
 
 - A "log"-olás is kimaradt, amit legalább az alkalmazás indításakor, illetve adatbázis DML mûveletek (insert, update, delete) futtatása esetén illene naplózni.
